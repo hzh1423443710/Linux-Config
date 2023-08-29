@@ -37,3 +37,36 @@ set tabstop=4
 "set softtabstop=4
 set shiftwidth=4
 set backspace=indent,eol,start
+" 设置快捷键
+noremap <F8> :wa<CR> :sh<CR>
+noremap <F4> :wa<CR>
+noremap <F5> :wa<CR> :make<CR><CR><CR>
+" 添加注释
+noremap <F2> :normal ^i// <CR> :normal ^<CR>  
+" 删除注释
+noremap <F3> :normal ^3x <CR> :normal ^<CR>
+
+
+call plug#begin('~/.vim/plugged')
+
+Plug 'ycm-core/YouCompleteMe'
+Plug 'ycm-core/ycmd'
+Plug 'preservim/nerdtree'
+
+call plug#end()
+
+
+" 激活 YouCompleteMe 插件
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/third_party/ycmd/examples/.ycm_extra_conf.py'
+let g:ycm_confirm_extra_conf = 0
+
+" 设置补全触发键
+let g:ycm_key_invoke_completion = '<C-Space>'
+
+" 设置代码补全的引擎和语言服务器
+let g:ycm_path_to_python_interpreter = '/usr/bin/python3'
+
+let g:ycm_clangd_binary_path = 'clangd'        " clangd 可执行文件的路径
+let g:ycm_clangd_uses_ycmd_caching = 0         " 禁用 YCM 的缓存，使用 clangd 自己的缓存
+let g:ycm_clangd_debug = 0                     " 关闭调试信息
+
