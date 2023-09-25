@@ -465,7 +465,14 @@ chmod 600 ~/.ssh/authorized_keys # 放入Windows公钥
 
 ```sh
 sudo apt-get install zsh # zsh
-wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh # on-my-zsh
+wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh # on-my-zsht
+替换为gitee
+# Default settings
+REPO=${REPO:-ohmyzsh/ohmyzsh}
+REMOTE=${REMOTE:-https://github.com/${REPO}.git}
+替换为
+REPO=${REPO:-mirrors/oh-my-zsh}
+REMOTE=${REMOTE:-https://gitee.com/${REPO}.git}
 ```
 
 ```sh
