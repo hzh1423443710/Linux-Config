@@ -128,11 +128,13 @@ $ sudo hostname newname
 |          top          |                                                              |                          任务管理器                          |
 |         umask         |                                                              | 查看权限掩码权限掩码，创建文件时文件的实际模式=mode&(~umask) |
 |         uname         |                              -a                              |                       查看系统相关信息                       |
-|        strace         |                                                              |              跟踪程序执行，查看调用的系统函数。              |
+|        strace         |                      -e signal -p <pid>                      |              跟踪程序执行，查看调用的系统函数。              |
 |          nm           |                                                              |                      查看变量,函数符号                       |
 |          ldd          |                                                              |                      查看是否缺少动态库                      |
 |   tail -f filename    | 会把 filename 文件里的最尾部的内容显示在屏幕上，并且不断刷新，只要 filename 更新就可以看到最新的文件内容 |                                                              |
 |        netstat        |                             -apn                             |                                                              |
+|         xargs         |                                                              |                                                              |
+|        who -r         |                         查看运行级别                         |                                                              |
 
 
 
@@ -620,4 +622,37 @@ worker进程挂掉一个后, master进程会自动重启一个
 
 
 
-sudo find / -name "signal.h" | xargs grep in "SIGHUP"
+### 开机自启
+
+```bash
+vim /lib/systemd/system/nginx.service
+[Unit]
+Description=nginx service
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/nginx/sbin/nginx
+ExecReload=/usr/local/nginx/sbin/nginx -s reload
+ExecStop=/usr/local/nginx/sbin/nginx -s quit
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```bash
+# 设置开机自启动
+systemctl enable nginx 
+# 关闭开机自动启动
+systemctl disable nginx
+# 启动nginx服务
+systemctl start nginx.service
+# 停止服务
+systemctl stop nginx.service
+# 重新启动服务
+systemctl stop nginx.service
+# 查看所有已启动的服务
+systemctl list-units --type=service
+```
+
