@@ -354,6 +354,8 @@ gcc -Wall	# 生成所有警告信息
 gcc -D 		# 指定宏
 gcc -L 		# 指定库的搜索路径 
 gcc -l 		# 指定库名(掐头去尾去掉开头的lib和尾部的.a)
+gcc -M      # 显示一个源文件所依赖的各种文件
+gcc -MM     # 显示一个源文件所依赖的各种文件，但不包括系统的一些头文件
 ```
 
 ### 静态链接库
@@ -379,22 +381,20 @@ gcc <source_file_1.c> <source_file_2.c> ... <source_file_n.c> -shared -fPIC -o <
 
 
 # 进程管理
-
-- ps
-
-> ps   		# 查看当前运行的进程
->
-> ps -aux 	 # 查看所有进程
->
-> pstree 	  # 查看进程树
->
-> ps ajx | more
->
-> ps -A -ostat,ppid,pid,cmd | grep ""
->
-> ps -ef       # 显示所有命令，连带命令行
->
-> ps -eo pid,ppid,sid,pgrp,nlwp,cmd,stat # nlwp 线程数
+## 进程查询
+>ps   		# 查看当前运行的进程
+> 
+>ps -aux 	 # 查看所有进程
+> 
+>pstree 	  # 查看进程树
+> 
+>ps ajx | more
+> 
+>ps -A -ostat,ppid,pid,cmd | grep ""
+> 
+>ps -ef       # 显示所有命令，连带命令行
+> 
+>ps -eo pid,ppid,sid,pgrp,nlwp,cmd,stat # nlwp 线程数
 
 - other
 
@@ -417,6 +417,24 @@ gcc <source_file_1.c> <source_file_2.c> ... <source_file_n.c> -shared -fPIC -o <
 > **strace:** 跟踪进程信号 strace -e trace=signal -p `<pid>`
 
 init进程(1号) 接管孤儿进程
+
+## 进程状态
+
+| 状态 |                            含义                            |
+| :--: | :--------------------------------------------------------: |
+|  D   | 不可中断的休眠状态(通常是I/O的进程)，可以处理信号，有 延迟 |
+|  R   |          可执行状态&运行状态(在运行队列里的状态)           |
+|  S   |    可中断的休眠状态之中（等待某事件完成），可以处理信号    |
+|  T   |            停止或被追踪（被作业控制信号所停止）            |
+|  Z   |                          僵尸进程                          |
+|  X   |                         死掉的进程                         |
+|  <   |                       高优先级的进程                       |
+|  N   |                       低优先级的进程                       |
+|  L   |                      有些页被锁进内存                      |
+|  s   |      Session leader（进程的领导者），在它下面有子进程      |
+|  t   |                   追踪期间被调试器所停止                   |
+|  +   |                      位于前台的进程组                      |
+
 
 
 
@@ -499,7 +517,7 @@ source .zshrc
 ```sh
 # gitee
 git clone https://gitee.com/zjy_1671/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://gitee.com/chenweizhen/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestionss
+git clone https://gitee.com/chenweizhen/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 ```
 
 https://blog.csdn.net/qwe641259875/article/details/107201760
