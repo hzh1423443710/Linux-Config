@@ -380,6 +380,8 @@ gcc <source_file_1.c> <source_file_2.c> ... <source_file_n.c> -shared -fPIC -o <
 
 # 进程管理
 
+- ps
+
 > ps   		# 查看当前运行的进程
 >
 > ps -aux 	 # 查看所有进程
@@ -392,11 +394,15 @@ gcc <source_file_1.c> <source_file_2.c> ... <source_file_n.c> -shared -fPIC -o <
 >
 > ps -ef       # 显示所有命令，连带命令行
 >
-> echo $?      # 打印进程退出码
->
-> top(1)
->
 > ps -eo pid,ppid,sid,pgrp,nlwp,cmd,stat # nlwp 线程数
+
+- other
+
+> `kill -KILL -<pgrp>`  # 符号 发给进程组
+>
+> echo $?       # 打印进程退出码
+>
+> top(1)		# 任务管理器
 >
 > **setsid:** 创建一个新的会话运行程序 
 >
