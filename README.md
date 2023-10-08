@@ -437,8 +437,38 @@ init进程(1号) 接管孤儿进程
 
 
 
-
 # 配置
+
+## SSH
+
+- 生成SSH密钥对
+
+```bash
+sudo apt-get install openssh-server
+ssh-keygen -t rsa -C "your_email@youremail.com"
+```
+
+-t rsa指定生成RSA算法的密钥对
+
+-C用于添加一个注释，一般为你的邮箱地址。
+	会在用户主目录下的.ssh文件夹中生成id_rsa和id_rsa.pub两个文件，私钥保持在本地机器上，而公钥则可以被分享给其他人或远程服务器。
+
+用途:
+    远程登录：通过将公钥添加到远程服务器的"authorized_keys"文件中，你可以使用私钥进行无密码的SSH连接。
+
+​    文件传输：SCP, SFTP
+
+​    Git版本控制：将公钥添加到Git托管平台，如GitHub、GitLab等，可实现使用SSH协议进行代码仓库的克隆、推送和拉取操作。
+
+- 拷贝公钥
+
+```bash
+ssh-copy-id user@remote_host
+```
+
+​	将公钥添加到远程主机的authorized_keys文件中，从而实现无密码SSH登录。
+
+​	authorized_keys文件用于存放被信任的远程主机的公钥, 每个公钥应该占据一行，通常以ssh-rsa或ssh-ed25519开头，后面紧跟着一串由SSH密钥生成命令生成的密钥内容。
 
 ## 时区
 
