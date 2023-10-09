@@ -9,71 +9,11 @@ man: man 1命令 2系统调用 3库函数
 
 ## 文件操作
 
-- **创建文件** : touch
-
-- **文件拷贝** : cp 
-
-- **文件移动(重命名)** : **mv ** 同一路径 重命名
-
-- **文件删除** : rm,rmdir(删除空目录)
-
-- **文件统计/搜索** :find,grep,wc,locate
-
-```shell
-find:					#文件路径查询
-format: find + 目录 + 选项(-name,-user,-size) + 文件/用户...
--name:find / -name "stdio.h"	 
--user:find / -user "hzh"
--size:find 目录 -size +20M（+20K）	#：搜索大于20M的文件   +  - =
--size:find 目录 -size +20M -size -50M #搜索大于20M小于50M
--type:find 目录 -type 'l' 		 # 搜索软链接文件
--maxdepth: find 目录 -maxdepth n option ...#指定搜索深度n
--atime:文件访问时间
--mtime:文件属性修改时间
--ctime:文件内容修改时间
-```
-
-```shell
-grep:					#过滤信息查找,一般通过管道
-grep:-n(显示行号)  -i(忽略大小写)
-grep:find / -name "stdio.h"	 | grep "stdio"
-grep:last | grep "hzh"
-```
-
-```shell
-wc:					 	#统计 行数,字符数,文件大小
-wc:-l(统计行数) -w(统计字符数) -c(文件大小),-m(字符数)
-```
-
-- 文件比较: diff
-
-```shell
-diff a.cpp b.cpp 	#文件相同不显示任何信息  文件不同...
-```
-
-
-
-## 文件查看:
-
-- **tree **树状结构显示目录
-
-- **stat** 查看文件属性
-
-- **cat** [-n]  #查看文件内容,-n显示行号,空行也标注
-
-- **tac**  从左到右 从上到下 反向显示
-
-- **nl**  查看文件内容 并 显示行号,空行不标注行号
-
-- **more**
-
-- **less**
-
-- **head**
-
-- **tail**
-
-
+- touch cp mv rm rmdir
+- find grep wc locate
+- diff vimdiff
+- tree stat
+- cat tac nl more less head tail
 
 ## 文件压缩
 
@@ -114,12 +54,6 @@ history 	#显示历史使用命令 附带
 !-2:		#执行 历史命令中 倒数第二个
 ```
 
-- 修改主机名 **hostname**
-
-```shell
-$ sudo hostname newname
-```
-
 |        command        |                            option                            |                           comment                            |
 | :-------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | ifconfig,ifup, ifdown |                                                              |                          查看网络ip                          |
@@ -135,6 +69,7 @@ $ sudo hostname newname
 |        netstat        |                             -apn                             |                                                              |
 |         xargs         |                                                              |                                                              |
 |        who -r         |                         查看运行级别                         |                                                              |
+|       hostname        |                          修改主机名                          |                                                              |
 
 
 
@@ -329,7 +264,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt
 类似于Windows的快捷方式
 
 ```shell
-ln -s 源文件 newfile			#绝对路径, 删除源文件后,软链接不可用
+ln -s 源文件 newfile			# 绝对路径, 删除源文件后,软链接不可用
 ```
 
 ### 	硬链接
@@ -337,7 +272,7 @@ ln -s 源文件 newfile			#绝对路径, 删除源文件后,软链接不可用
 类似于备份,硬链接/源文件 修改后 ,链接文件的内容都会修改(同步),目录项dentry
 
 ```shell
-ln 源文件 newfile				#修改newfile 源文件也会被修改  - 源文件删除后,newfile不会被删除,硬链接数-1
+ln 源文件 newfile				# 修改newfile 源文件也会被修改  - 源文件删除后,newfile不会被删除,硬链接数-1
 ```
 
 
@@ -448,10 +383,11 @@ sudo apt-get install openssh-server
 ssh-keygen -t rsa -C "your_email@youremail.com"
 ```
 
--t rsa指定生成RSA算法的密钥对
+ - -t rsa指定生成RSA算法的密钥对
 
--C用于添加一个注释，一般为你的邮箱地址。
-	会在用户主目录下的.ssh文件夹中生成id_rsa和id_rsa.pub两个文件，私钥保持在本地机器上，而公钥则可以被分享给其他人或远程服务器。
+ - -C用于添加一个注释，一般为你的邮箱地址。
+
+   ​	会在用户主目录下的.ssh文件夹中生成id_rsa和id_rsa.pub两个文件，私钥保持在本地机器上，而公钥则可以被分享给其他人或远程服务器。
 
 用途:
     远程登录：通过将公钥添加到远程服务器的"authorized_keys"文件中，你可以使用私钥进行无密码的SSH连接。
@@ -470,6 +406,12 @@ ssh-copy-id user@remote_host
 
 ​	authorized_keys文件用于存放被信任的远程主机的公钥, 每个公钥应该占据一行，通常以ssh-rsa或ssh-ed25519开头，后面紧跟着一串由SSH密钥生成命令生成的密钥内容。
 
+- 验证
+
+```bash
+ssh -T git@gitee.com
+```
+
 ## 时区
 
 ```bash
@@ -487,19 +429,9 @@ source ~/.bashrc
 ## vim
 [init.vim](./init.vim)
 
-## git免密
+## git
 
-```sh
-git config --global user.name ""
-git config --global user.email ""
-```
-
-生成 sshkey
-
-```bash
-ssh-keygen -t ed25519 -C "xxxxx@xxxxx.com"  
-ssh -T git@gitee.com
-```
+[git](./git/git.md)
 
 ## 设置默认shell
 
@@ -551,13 +483,6 @@ git clone https://gitee.com/chenweizhen/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/
 ```
 
 https://blog.csdn.net/qwe641259875/article/details/107201760
-
-## clangd
-
-```sh
-sudo apt update
-sudo apt install clangd
-```
 
 
 
