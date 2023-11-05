@@ -6,31 +6,33 @@ expr
 
 > shell脚本第一行:#!/bin/bash 告诉bash使用bash解释脚本,而不是shell
 
-## echo
-
-- 双引号""
-
-> 双引号中的变量**($val)会**当做变量
-
-- 单引号''
-
-> 单引号中的变量**($val)不会**当做变量
-
-- 反引号\`\`
-
-> 反引号当中的内容会解释为系统命令`command`
-
-- echo -e 使echo支持转义字符
-
-- 小括号()
-
-> 执行`()` 中的命令**不会**影响`()`外的变量
-
-- 花括号`{}`
-
-> 执行`{}` 中的命令**会**影响`{}`外的变量
-
 ## 变量
+
+```bash
+#!/bin/bash
+# 定义变量
+a=1 # 不能有空格
+
+# 算术运算
+echo $[2**10]
+echo $((2**5))
+let "b = 3**3"
+
+# 执行shell命令
+echo $(which echo)      
+echo `which echo`
+
+# 访问变量
+echo $SHELL
+echo ${SHELL}
+
+# 命令行参数$
+echo $$         # 当前进程ID
+echo "$0"       # $num 访问第几个命令行参数
+echo "argc = $#"# 命令行参数个数
+echo "$@"       # 命令行参数列表
+echo "$*"       # 所有命令行参数的字符串
+```
 
 ### 变量修饰
 
@@ -284,8 +286,7 @@ done
 example1:
 
 ```shell
-function fun1()
-{
+function fun1() {
     echo "This a function"
     return 100
 }
@@ -305,8 +306,7 @@ example2:
 接受函数参数
 
 ```shell
-function add()
-{
+function add() {
     echo "参数个数:$#个"
     declare -i sum=0
     for i in $*
