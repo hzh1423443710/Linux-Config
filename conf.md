@@ -96,7 +96,7 @@ ssh -T git@gitee.com
 sudo timedatectl set-timezone Asia/Shanghai
 ```
 
-## 语言
+### 语言
 
 ```bash
 sudo apt-get install language-pack-zh-hans
@@ -104,20 +104,14 @@ export LANG=zh_CN.utf8 # bash
 source ~/.bashrc
 ```
 
-## vim
+### vim
 [init.vim](./init.vim)
 
-## git
+### git
 
 [git](./git/git.md)
 
-## 设置默认shell
-
-```bash
-chsh [-s 新的Shell路径] 用户名
-```
-
-## vscode免密
+### vscode-SSH免密
 
 ```bash
 sudo apt update
@@ -127,7 +121,7 @@ touch ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys # 放入Windows公钥
 ```
 
-## Zsh
+### Zsh
 
 ```sh
 sudo apt-get install zsh # zsh
@@ -166,13 +160,13 @@ https://blog.csdn.net/qwe641259875/article/details/107201760
 
 # Nginx
 
-### **安装依赖**
+## **安装依赖**
 
 - gcc g++编译器
 - prece库
 - zlib库
 
-### **目录结构**
+## **目录结构**
 
 auto/: 编译相关的脚本, configure会用到
 
@@ -218,7 +212,7 @@ objs/: 执行了configure生成的中间文件目录
 
 Makefile: 执行了configure生成的构建脚本
 
-### **编译安装**
+## **编译安装**
 
 ```sh
 ./configure

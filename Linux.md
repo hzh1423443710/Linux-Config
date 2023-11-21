@@ -10,13 +10,19 @@
 /etc/group		# 组配置
 ```
 
-**useradd**
+- passwd
+
+```bash
+$ passwd -S <user> 	# 查看用户密码状态(--status)
+```
+
+- useradd, userdel
 
 ```bash
 # useradd 后自动创建的目录
-$ /home/user
-$ /var/spool/mail/user
-$ /var/mail/user
+`/home/user`
+`/var/spool/mail/user`
+`/var/mail/user`
 
 $ useradd -g <gid> <user>	# 创建用户 并指定gid和主组
 $ useradd -G <group> <user>	# 创建用户 并指定附加组
@@ -24,7 +30,7 @@ $ useradd -G <group> <user>	# 创建用户 并指定附加组
 $ userdel -r 				# 连带删除 创建的目录
 ```
 
-**usermod**
+- usermod
 
 ```bash
 $ usermod -s /sbin/nologin <username>	# 指定 禁用登录shell
@@ -32,7 +38,7 @@ $ usermod -G <group>... <user>			# 设置 用户的附加组
 $ usermod -g <gid> <user>				# 修改 用户组id和主组
 ```
 
-**设置组成员**
+- gpasswd
 
 ```bash
 $ gpasswd -a <user> <group>				# 添加 用户到组
@@ -40,15 +46,17 @@ $ gpasswd -M <user0,user1,...> <group>	# 设置 组的成员列表(--member)
 $ gpasswd -d <user> <group>				# 从组中删除用户
 ```
 
-**mode权限位**
+- mode权限位
 
 umask配置文件: `/etc/bashrc` `~/.bashrc`
 
 **uid**(rel uid)与**euid**(effective uid)与**suid**(SetUID),**sgid**(SetGID)
 
-- uid : 真正执行可执行文件的用户id
-- euid: 如果设置了suid, euid为可执行文件的属主, 否则等于uid
-- suid: SetUID, 可以让用户以文件属主的用户运行程序
+> uid : 真正执行可执行文件的用户id
+>
+> euid: 如果设置了suid, euid为可执行文件的属主, 否则等于uid
+>
+> suid: SetUID, 可以让用户以文件属主的用户运行程序
 
 ```bash
 # 修改mode
@@ -69,7 +77,7 @@ $ chgrp <group> <file>
 $ umask <mask>
 ```
 
-**ACL(Access Control List)**
+- ACL(Access Control List)
 
 ```bash
 $ chacl getfacl setacl
@@ -104,7 +112,7 @@ $ setfacl -m <m:rwx> <file>			# 设置 文件file的mask为rwx
 
 ### rpm
 
-相关参数:
+- 相关参数
 
 ```bash
 # 安装(包全名)
@@ -118,8 +126,8 @@ $ setfacl -m <m:rwx> <file>			# 设置 文件file的mask为rwx
 --allmatche		# 存在多个版本,批量卸载
 
 # 升级(包全名)
--Uvh <rpm>		# 更新/安装(无旧版本安装)
--Fvh <rpm>		# 只更新(所以前提是有旧版本)
+-Uvh <rpm>		# 更新/安装(无需旧版本)
+-Fvh <rpm>		# 只更新(需有旧版本)
 
 # 查询(指定包名)
 -q <pkgname>	# 查询 软件包是否安装
@@ -133,7 +141,7 @@ $ setfacl -m <m:rwx> <file>			# 设置 文件file的mask为rwx
 -qd <pkgname>	# 查看 已安装软件包配套的帮助文档(doc)
 ```
 
-**构建rpm**
+- 构建rpm
 
 ```bash
 $ dnf install rpm-build	# 安装rpm-build
@@ -161,9 +169,11 @@ License:
 %changelog
 ```
 
+
+
 ### yum/dnf
 
-**用法(root):** yum和dnf命令一致, dnf执行更快
+- 用法(root): yum和dnf命令一致, dnf执行更快
 
 ```bash
 # 查询
@@ -192,7 +202,7 @@ $ dnf download --resolve zsh
 $ dnf install  --downloadonly zsh --downloaddir=./
 ```
 
-**管理软件组**
+- 管理软件组
 
 ```bash
 $ dnf group
@@ -202,7 +212,7 @@ $ yum groupinstall <grpname>	# 安装 软件组
 $ yum groupremove <grpname>		# 卸载 软件组
 ```
 
-**dnf配置**
+- dnf配置
 
 配置文件:`/etc/dnf/dnfconf`
 
@@ -222,9 +232,11 @@ enabled=1
 gpgcheck=0
 ```
 
+
+
 ### 软件源
 
-**配置yum仓库**
+- 配置yum仓库
 
 配置文件:`/etc/yum.repos.d/`下的`*.repo`, 格式如下
 
@@ -237,12 +249,14 @@ gpgcheck= 	# 如果为 1 则表示 RPM 的数字证书生效；如果为 0 则�
 gpgkey=		# 数字证书的公钥文件保存位置
 ```
 
-**创建本地yum源**
+- 创建本地yum源
 
 ```bash
 $ yum install createrepo
 $ createrepo --database <dir> # 将dir作为本地仓库目录,生成元数据信息
 ```
+
+
 
 ### config-manager
 
@@ -263,9 +277,7 @@ $ yum-config-manager --add-repo <url>
 
 ## 磁盘管理
 
-### 分区方案
-
-**分区标准**
+**分区标准:**
 
 - MBR(Master Boot Record)
 
@@ -284,22 +296,12 @@ $ yum-config-manager --add-repo <url>
 
 **文件系统:**
 
-NTFS: 基于安全性的文件系统
+- NTFS: 基于安全性的文件系统
+- NFS: 网络文件系统
+- ext: 标准Linux文件系统
+- xfs: 日志文件系统
 
-NFS: 网络文件系统
 
-ext: 标准Linux文件系统
-
-xfs: 日志文件系统
-
-```bash
-# 格式化磁盘 写入文件系统
-$ mkfs -t <dev>
-$ mkfs.* <dev>
-$ fsck [opt] <dev>		# 检测和修复文件系统
-$ mkswap:
-$ swapon:
-```
 
 **磁盘查看:**
 
@@ -310,10 +312,13 @@ $ df -H <dir>	# 查看 目录所在分区
 
 # du (disk used)
 $ du -sh <file> # 查看 文件或目录占用的磁盘空间
-$ du -ah <file> # 会统计子目录
+$ du -ah <file> # 统计子目录
 
-$ lsblk			# 查看 device和mountpoint 
-$ blkid			# 查看 分区后的filesystem和UUID
+# 查看或设置ext文件系统的卷标LABLE
+$ e2lable <dev> [label] 
+
+$ lsblk -f		# 查看块设备及文件系统
+$ blkid			# 查看块设备UUID TYPE LABLE
 ```
 
 **磁盘分区:**
@@ -326,32 +331,54 @@ $ partprobe
 $ fdisk -l 		# 查看 硬盘和分区
 
 # 支持MBR,GPT分区
-$ parted
- $ -l			# 列出所有设备的分区
+$ parted  
+$ parted [<dev> -l] # 列出所有设备的分区
+# 子命令
+ $ select <dev>		# 选择设备
  $ print
- $ mklable		# 创建 磁盘标签 gpt msdos
- $ mkpart		# 创建 分区
- $ rm			# 删除 分区
+ $ mklable/mktable	# 创建 分区表 gpt msdos
+ $ rm <NUM>			# 删除 分区
+ $ mkpart <name> <fs> <start> <end>	# 创建 gpt分区
+ $ mkpart <primary/extended> <fs> <start> <end>	# 创建 msdos分区
 ```
 
 **磁盘分区标签:**
 
 ```bash
-$ wipefs <devfile>		# 查看磁盘上的文件系统签名
-$ wipefs -a <devfile>	# 擦除磁盘上的文件系统签名
+$ wipefs <devfile>		# 查看磁盘上的文件系统签名 DEVICE TYPE UUID LABLE
+$ wipefs -a <devfile>	# 擦除
+```
+
+### 格式化
+
+```bash
+$ fsck [opt] <dev>		# 检测和修复文件系统
+# 格式化磁盘 写入文件系统
+$ mkfs -t <dev>
+$ mkfs.* <dev>
 ```
 
 ### 挂载
 
 **临时挂载mount**
 
-1. 使用设备名挂载
-2. 使用UUID挂载
-3. 使用LABEL挂载
-
 ```bash
-$ mount 	# 查看所有挂载的信息
--t			# 挂载时指定文件系统, 要与mkfs指定的相同 不写会自动检测
+# 查看所有挂载的信息
+$ mount
+$ -v	# verbose
+$ -t	# 挂载时指定文件系统, 要与mkfs指定的相同 不写会自动检测
+$ -a 	# 检查并挂载/etc/fstab中的条目
+
+# 1.使用设备名挂载
+$ mount <dev> <mountpoint>
+# 2.使用UUID挂载
+$ mount -U <uuid> <mountpoint>
+$ mount UUID="" <mountpoint>
+# 3.使用LABEL挂载
+$ mount -L <label> <mountpoint>
+$ mount LABEL="" <mountpoint>
+
+$ umount 	# 取消挂载
 ```
 
 **持久化挂载**
@@ -370,8 +397,6 @@ tmpfs             /tmp       tmpfs      nodev,nosuid           0        0
 # 第5个字段 0不备份 1备份
 # 第6个字段 0不被fsck检查 1和2代表检测的优先级,1>2
 ```
-
-- mount -a 检查并挂载`/etc/fstab`中的条目
 
 ### LVM逻辑卷
 
@@ -411,7 +436,16 @@ tmpfs             /tmp       tmpfs      nodev,nosuid           0        0
     resize2fs: 缩容先缩容文件系统
     ```
   
-    
+
+
+
+### swap
+
+```bash
+$ mkswap
+$ swapon
+$ swapoff
+```
 
 
 
@@ -749,8 +783,6 @@ crond扫描任务的目录:`/var/spool/cron/`
 
 系统级别配置任务:`/etc/crontab`
 
-任务搜索目录:`/var/spool/cron`
-
 日志文件:`/var/log/cron`	用户查看任务是否顺利执行
 
 **用户级别的计划任务**
@@ -896,7 +928,7 @@ $ sed [options] command [input-file]
 $ -n			# 取消默认全文打印,只显示命令操作行
 $ -i			# 写入文件,不用-i修改的是内存缓冲区
 $ -e			# 多次编辑 不需要管道符
-$ -r			# 支持拓展正则
+$ -r/E			# 支持拓展正则(|不需要转义)
 # sed command
 $ a 			# append 指定行后 追加 一行/多行
 $ i				# insert 指定行前 插入 一行/多行
