@@ -2,25 +2,28 @@
 
 ## 命令
 
-|        Command        |   Common option    |                           Comment                            |
-| :-------------------: | :----------------: | :----------------------------------------------------------: |
-| ifconfig,ifup, ifdown |                    |                          查看网络ip                          |
-|        history        |   -n(显示近n条)    |                 显示历史使用命令(默认全显示)                 |
-|         last          |                    |                       显示历史登录信息                       |
-|          top          |                    |                          任务管理器                          |
-|         umask         |                    | 查看权限掩码权限掩码，创建文件时文件的实际模式=mode&(~umask) |
-|         uname         |         -a         |                       查看系统相关信息                       |
-|        strace         | -e signal -p <pid> |              跟踪程序执行，查看调用的系统函数。              |
-|          nm           |        -AC         |                      查看变量,函数符号                       |
-|        objdump        |        -DS         |                            反汇编                            |
-|          ldd          |                    |                        查看依赖动态库                        |
-|        netstat        |        -apn        |                                                              |
-|         xargs         |                    |                             传参                             |
-|        who -r         |    查看运行级别    |                                                              |
+| Command |   Common option    |                           Comment                            |
+| :-----: | :----------------: | :----------------------------------------------------------: |
+| history |   -n(显示近n条)    |                 显示历史使用命令(默认全显示)                 |
+|  last   |                    |                       显示历史登录信息                       |
+|   top   |                    |                          任务管理器                          |
+|  umask  |                    | 查看权限掩码权限掩码，创建文件时文件的实际模式=mode&(~umask) |
+|  uname  |         -a         |                       查看系统相关信息                       |
+| strace  | -e signal -p <pid> |              跟踪程序执行，查看调用的系统函数。              |
+|   nm    |        -AC         |                      查看变量,函数符号                       |
+| objdump |        -DS         |                            反汇编                            |
+|   ldd   |                    |                        查看依赖动态库                        |
+| netstat |        -apn        |                                                              |
+|  xargs  |                    |                             传参                             |
+|   who   |       -r,-a        |                         查看用户登录                         |
+|  file   |                    |                         查看文件类型                         |
+|  type   |                    |                                                              |
+| whatis  |                    |                                                              |
+| strings |                    |                   打印文件中的可打印字符串                   |
 
 
 
-## GCC
+### GCC
 
 - **gcc**
 
@@ -57,8 +60,8 @@ $ gcc <source1.c> <source2.c> ...  -shared -fPIC -o <library_name>.so
 - 生成SSH密钥对
 
 ```bash
-sudo apt-get install openssh-server
-ssh-keygen -t rsa -C "your_email@youremail.com"
+$ sudo apt-get install openssh-server
+$ ssh-keygen -t rsa -C "your_email@youremail.com"
 ```
 
  - -t rsa指定生成RSA算法的密钥对
@@ -77,7 +80,7 @@ ssh-keygen -t rsa -C "your_email@youremail.com"
 - 拷贝公钥
 
 ```bash
-ssh-copy-id user@remote_host
+$ ssh-copy-id user@remote_host
 ```
 
 ​	将公钥添加到远程主机的authorized_keys文件中，从而实现无密码SSH登录。
@@ -123,16 +126,12 @@ chmod 600 ~/.ssh/authorized_keys # 放入Windows公钥
 
 ### Zsh
 
+**安装zsh oh-my-zsh**
+
 ```sh
-sudo apt-get install zsh # zsh
-wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh # on-my-zsht
-替换为gitee
-# Default settings
-REPO=${REPO:-ohmyzsh/ohmyzsh}
-REMOTE=${REMOTE:-https://github.com/${REPO}.git}
-替换为
-REPO=${REPO:-mirrors/oh-my-zsh}
-REMOTE=${REMOTE:-https://gitee.com/${REPO}.git}
+sudo apt install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
 ```
 
 ```sh
@@ -141,20 +140,37 @@ vim ~/.zshrc
 ZSH_THEME="robbyrussell"
 # 修改插件
 plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
-# zsh-syntax-highlighting
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-# zsh-autosuggestions
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 source .zshrc
 ```
 
-```sh
-# gitee
-git clone https://gitee.com/zjy_1671/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-git clone https://gitee.com/chenweizhen/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+**管理插件**
+
+- https://github.com/zsh-users/zsh-syntax-highlighting
+
+```bash
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 ```
 
-https://blog.csdn.net/qwe641259875/article/details/107201760
+- https://github.com/zsh-users/zsh-autosuggestions
+
+```bash
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+
+- https://github.com/zsh-users/zsh-completions
+
+```bash
+# Clone the repository inside your oh-my-zsh repo:
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+# Add it to `FPATH` in your `.zshrc` before `source "$ZSH/oh-my-zsh.sh"`:
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+```
+
+- https://github.com/ael-code/zsh-colored-man-pages
+
+```bash
+git clone https://github.com/ael-code/zsh-colored-man-pages ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-colored-man-pages
+```
 
 
 
@@ -221,17 +237,12 @@ sudo make install # 默认安装在/usr/local/nginx
 cd /usr/local/nginx/sbin && sudo ./nginx
 ```
 
-
-
-`ps -ef | grep nginx` 查看master进程和worker进程的数量
-
-`sudo vim /usr/local/nginx/conf/nginx` 修改worker进程数量
-
-`sudo ./nginx -h` 查看帮助
-
-`sudo ./nginx -s reload` 不关闭服务,重新加载配置文件
-
-worker进程挂掉一个后, master进程会自动重启一个
-
-
-
+> `ps -ef | grep nginx` 查看master进程和worker进程的数量
+>
+> `sudo vim /usr/local/nginx/conf/nginx` 修改worker进程数量
+>
+> `sudo ./nginx -h` 查看帮助
+>
+> `sudo ./nginx -s reload` 不关闭服务,重新加载配置文件
+>
+> worker进程挂掉一个后, master进程会自动重启一个

@@ -15,7 +15,7 @@ $ ls /sys/firmware/efi/efivars
 ### 更新系统时间
 
 ```bash
-$ timedatectl set-ntp true	# 同步时间
+$ timedatectl set-ntp true	# 启用ntp自动同步时间
 $ timedatectl status		# 查看当前系统的日期、时间和时区设置
 ```
 
@@ -252,6 +252,4 @@ $ pacman -Qs rust					# 查询软件包是否安装
 $ pacman -Sy yay					# 从 Arch Linux CN 源安装yay
 $ pacman -Sy archlinuxcn-keyring	# 导入 GPG key
 ```
-
-### 
 
