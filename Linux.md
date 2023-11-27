@@ -1,33 +1,42 @@
 # Linux
 
-## 用户和权限
-
-**相关配置文件:**
+### etc
 
 ```bash
-/etc/passwd		# 用户配置
-/etc/shadow		# 加密后的用户密码
-/etc/group		# 组配置
+$ /etc/shells		# 可用shell列表
+$ /etc/sudoers 		# sudo 权限的配置
+$ /etc/os-release	# 系统信息
+```
+
+## 用户和权限
+
+**相关配置文件**
+
+1. `/etc/passwd`：用户帐号信息文件
+2. `/etc/shadow`：用户帐号信息加密文件
+3. /etc/gshadow：用户组信息加密文件
+4. `/etc/group`：组信息文件
+5. `/etc/default/useradd`：定义`useradd`命令的默认设置，包括新建用户时的一些默认配置，如默认的Shell、默认的用户组等
+6. `/etc/login.defs`：系统广义设置文件.系的登录定义文件，用于定义用户登录的行为和限制条件，如密码策略、登录超时等.
+7. `/etc/skel`：默认的初始配置文件目录,其中存放着系统创建新用户时所使用的默认配置文件和目录结构。当创建新用户时，系统会将`/etc/skel`目录中的内容复制到新用户的家目录中
+
+### 用户和组
+
+useradd, userdel
+
+自动创建的目录:`/home/user`,`/var/spool/mail/user`,`/var/mail/user`
+
+```bash
+$ useradd -g <gid> <user>	# 创建用户 并指定gid和主组
+$ useradd -G <group> <user>	# 创建用户 并指定附加组
+
+$ userdel -r 				# 连带删除 创建的目录
 ```
 
 - passwd
 
 ```bash
 $ passwd -S <user> 	# 查看用户密码状态(--status)
-```
-
-- useradd, userdel
-
-```bash
-# useradd 后自动创建的目录
-`/home/user`
-`/var/spool/mail/user`
-`/var/mail/user`
-
-$ useradd -g <gid> <user>	# 创建用户 并指定gid和主组
-$ useradd -G <group> <user>	# 创建用户 并指定附加组
-
-$ userdel -r 				# 连带删除 创建的目录
 ```
 
 - usermod
@@ -42,11 +51,13 @@ $ usermod -g <gid> <user>				# 修改 用户组id和主组
 
 ```bash
 $ gpasswd -a <user> <group>				# 添加 用户到组
-$ gpasswd -M <user0,user1,...> <group>	# 设置 组的成员列表(--member)
 $ gpasswd -d <user> <group>				# 从组中删除用户
+$ gpasswd -M <user0,user1,...> <group>	# 设置 组的成员列表(--member)
+
+$ newgrp <grp>			# 切换用户组
 ```
 
-- mode权限位
+### mode权限位
 
 umask配置文件: `/etc/bashrc` `~/.bashrc`
 
@@ -77,7 +88,9 @@ $ chgrp <group> <file>
 $ umask <mask>
 ```
 
-- ACL(Access Control List)
+### ACL
+
+访问控制列表(Access Control List)
 
 ```bash
 $ chacl getfacl setacl
@@ -141,7 +154,7 @@ $ setfacl -m <m:rwx> <file>			# 设置 文件file的mask为rwx
 -qd <pkgname>	# 查看 已安装软件包配套的帮助文档(doc)
 ```
 
-- 构建rpm
+- 构建rpm包
 
 ```bash
 $ dnf install rpm-build	# 安装rpm-build
@@ -171,18 +184,47 @@ License:
 
 
 
-### yum/dnf
+### dnf
 
-- 用法(root): yum和dnf命令一致, dnf执行更快
+- 全局配置文件`/etc/dnf/dnf.conf`
+
+  - "main"部分保存着DNF的全局设置。
+
+  - "repository"部分保存着软件源的设置，可以有零个或多个"repository"。
+
+> ​	配置repository部分有两种方式，一种是直接配置`/etc/dnf/dnf.conf`文件中的“repository”部分，另外一种是配置`/etc/yum.repos.d`目录下的.repo文件。
 
 ```bash
+# 全局配置
+[main]             			
+gpgcheck=1
+installonly_limit=3
+clean_requirements_on_remove=True
+best=True	# 
+skip_if_unavailable=False
+
+# repository
+[NAME]		# 仓库名称
+name=		# 描述
+baseurl=	# ftp:// 或 file:// 或 http:// 或 本地软件源
+enabled=	# enable=0 则表示此容器不生效
+gpgcheck= 	# 如果为 1 则表示 RPM 的数字证书生效；如果为 0 则表示 RPM 的数字证书不生效。
+gpgkey=		# 数字证书的公钥文件保存位置
+```
+
+- 管理软件包
+
+```bash
+# 检查更新
+$ dnf check-update
+
 # 查询
-$ dnf list installed
-$ dnf list all
-$ dnf list						# 查询 所有已安装和可安装的软件包
-$ dnf list <pkgname>			# 查询 软件包的安装情况
-$ dnf info <pkgname>			# 查询 软件包的详细信息
-$ dnf search <keyword>			# 查询 含有keyword的包
+$ dnf list [--all]				# 列出 所有的软件包
+$ dnf list --installed			# 列出 已安装的软件包
+$ dnf list <pkgname>			# 列出 特定的RPM包信息
+
+$ dnf info <pkgname>			# 显示 RPM包信息
+$ dnf search <keyword>			# 搜索软件包
 
 # 安装
 $ dnf install -y <pkgname>
@@ -191,86 +233,54 @@ $ dnf -y update [pkgname]		# 升级 所有包或pkgname
 # 卸载
 $ dnf remove <pkgname>
 
-$ dnf repolist [all|enabled|disabled] # 查看已配置的软件仓库
-$ dnf clean all 				# 清理缓存
-$ dnf makecache 				# 创建缓存 查看yum仓库是否配置成功
-$ dnf provides <file> 			# 查询file是哪个包提供的(绝对路径)
-$ dnf repoquery --list <pkgname># 等价于 rpm -ql <pkgname>		
+$ dnf repolist [all|enabled|disabled] 	# 查看已配置的软件仓库
+$ dnf clean all 						# 清理缓存
+$ dnf makecache 						# 创建缓存 查看repo是否配置成功
+$ dnf provides <file> 					# 查询file是哪个包提供的(绝对路径)
+$ dnf repoquery --list <pkgname>		# 等价于 rpm -ql <pkgname>		
 
-# 只下载不安装zsh
-$ dnf download --resolve zsh
-$ dnf install  --downloadonly zsh --downloaddir=./
+# 下载
+$ dnf download <pkg>			# 只下载不安装
+$ dnf download --resolve <pkg>	# 同时下载未安装的依赖
+$ dnf install --downloadonly <pkg> --downloaddir=./
 ```
 
-- 管理软件组
+- 管理软件包组
 
 ```bash
-$ dnf group
-$ dnf grouplist					# 查询 所有软件组
-$ yum groupinfo <grpname>		# 查询 软件组,如yum groupinfo server
-$ yum groupinstall <grpname>	# 安装 软件组
-$ yum groupremove <grpname>		# 卸载 软件组
+$ dnf groups summary			# 列出 系统中所有已安装软件包组、可用的组、可用的环境组的数量
+$ dnf group list				# 列出 所有软件包组和它们的组ID
+$ dnf group info group_name		# 显示 软件包组信息
+$ dnf group install group_name	# 安装 软件包组
+$ dnf group update group_name	# 升级 软件包组
+$ dnf group remove group_name	# 卸载 软件包组
 ```
 
-- dnf配置
-
-配置文件:`/etc/dnf/dnfconf`
+- 创建本地软件源仓库
 
 ```bash
-[main]                			# 全局配置                                   
-gpgcheck=1
-installonly_limit=3
-clean_requirements_on_remove=True
-best=True	# 
-skip_if_unavailable=False
-
-# 配置 软件仓库
-[Local]                                   
-name=local
-baseurl=file:///mnt
-enabled=1
-gpgcheck=0
+$ dnf install createrepo
+$ createrepo <dir> 				# 将dir作为本地仓库目录,生成元数据信息
 ```
 
-
-
-### 软件源
-
-- 配置yum仓库
-
-配置文件:`/etc/yum.repos.d/`下的`*.repo`, 格式如下
-
-```bash
-[NAME]		# 容器名称
-name=		# 描述
-baseurl=	# ftp:// 或 file:// 或 http:// 或 本地yum源
-enabled=	# enable=0 则表示此容器不生效
-gpgcheck= 	# 如果为 1 则表示 RPM 的数字证书生效；如果为 0 则表示 RPM 的数字证书不生效。
-gpgkey=		# 数字证书的公钥文件保存位置
-```
-
-- 创建本地yum源
-
-```bash
-$ yum install createrepo
-$ createrepo --database <dir> # 将dir作为本地仓库目录,生成元数据信息
-```
-
-
-
-### config-manager
+- 添加、启用和禁用软件源
 
 ```bash
 # 安装config-manager
-$ yum -y install yum-utils					# yum
-$ dnf install 'dnf-command(config-manager)'	# dnf
+$ yum -y install yum-utils						# yum
+$ dnf install 'dnf-command(config-manager)'		# dnf
 
-# 将url.repo 写入到yum/etc/yum.repos.d/下
-$ yum-config-manager --add-repo <url>
+# 添加软件源
+$ yum-config-manager --add-repo <url>			
+  # 在/etc/yum.repos.d/目录下生成对应的repo文件
+$ dnf config-manager --add-repo repository_url
 
-# 启用/关闭 仓库 name为repo文件中的[]的内容
---enable <name> 
---disable <name>
+# 查询repo id
+$ dnf repolist									
+# 启用软件源
+$ dnf config-manager --set-enable <repo id>		# 或	--enable <name> 
+# 禁用软件源
+$ dnf config-manager --set-disable repository	# 或 --disable <name>
 ```
 
 
@@ -442,35 +452,49 @@ tmpfs             /tmp       tmpfs      nodev,nosuid           0        0
 ### swap
 
 ```bash
-$ mkswap
-$ swapon
-$ swapoff
+$ mkswap	# 格式化swap分区
+$ swapon	# 启动swap分区
+$ swapoff	# 关闭swap分区
 ```
 
 
 
-## 服务管理
+## 系统和服务管理
 
-**用法:**
+为了减少系统启动时间，systemd的目标是：
+
+- 尽可能启动更少的进程。
+- 尽可能将更多进程并行启动。
 
 ```bash
 $ systemctl list-unit-files					# 列出 所有的单元文件
-$ systemctl list-units --type service		# 列出 已加载的服务
-$ systemctl --type=service --state running 	# 列出 运行的服务
+```
+
+### 管理系统服务
+
+```bash
+$ systemctl list-units --type service		# 列出 当前正在运行的服务
+$ systemctl list-units --type service --all # 显示 所有的服务(包括未运行的服务)
 $ systemctl status <service>				# 查看 服务状态
+
+$ systemctl is-active name.service
+$ systemctl is-enabled name.service
+
 
 $ systemctl start   <service>				# 启动 服务
 $ systemctl stop    <service>				# 停止 服务
+
 $ systemctl restart <service>				# 重启 服务
 $ systemctl reload  <service>				# 重新加载 配置文件
+
 $ systemctl enable  <service>				# 开启 开机自启
 $ systemctl disable <service>				# 关闭 开机自启
 ```
 
-**nginx.service**
+### service Unit
 
 ```bash
-vim /lib/systemd/system/nginx.service
+$ vim /lib/systemd/system/nginx.service
 [Unit]
 Description=nginx service
 After=network.target
@@ -485,6 +509,37 @@ PrivateTmp=true
 [Install]
 WantedBy=multi-user.target
 ```
+
+### Target和运行级别
+
+systemd用目标（target）替代了运行级别
+
+| 运行级别     | systemd目标（target）                                 | 描述                                                      |
+| :----------- | :---------------------------------------------------- | :-------------------------------------------------------- |
+| 0            | runlevel0.target，poweroff.target                     | 关闭系统。                                                |
+| 1, s, single | runlevel1.target，rescue.target                       | 单用户模式。                                              |
+| 2, 4         | runlevel2.target，runlevel4.target，multi-user.target | 用户定义/域特定运行级别。默认等同于3。                    |
+| 3            | runlevel3.target，multi-user.target                   | 多用户，非图形化。用户可以通过多个控制台或网络登录。      |
+| 5            | runlevel5.target，graphical.target                    | 多用户，图形化。通常为所有运行级别3的服务外加图形化登录。 |
+| 6            | runlevel6.target，reboot.target                       | 重启系统。                                                |
+| emergency    | emergency.target                                      | 紧急Shell                                                 |
+
+```bash
+$ systemctl get-default					# 查看 系统默认启动目标
+$ systemctl list-units --type=target	# 查看 当前系统所有的启动目标
+$ systemctl set-default name.target		# 改变 系统默认目标
+$ systemctl isolate name.target			# 改变 当前系统的目标
+$ systemctl rescue						# 改变 当前系统为救援模式
+$ systemctl emergency					# 改变 当前系统为紧急模式
+```
+
+### 关闭、暂停和休眠系统
+
+| Linux常用管理命令 | systemctl命令      | 描述     |
+| :---------------- | :----------------- | :------- |
+| halt              | systemctl halt     | 关闭系统 |
+| poweroff          | systemctl poweroff | 关闭电源 |
+| reboot            | systemctl reboot   | 重启     |
 
 
 
@@ -511,15 +566,31 @@ WantedBy=multi-user.target
 
 ### 相关命令
 
-**查看进程**
+- ps
+
+| 选项 | 描述                                       |
+| :--- | :----------------------------------------- |
+| -e   | 显示所有进程。                             |
+| -f   | 全格式。                                   |
+| -h   | 不显示标题。                               |
+| -l   | 使用长格式。                               |
+| -w   | 宽行输出。                                 |
+| -a   | 显示终端上的所有进程，包括其他用户的进程。 |
+| -r   | 只显示正在运行的进程。                     |
+| -x   | 显示没有控制终端的进程。                   |
 
 ```bash
-$ ps   					# 查看 当前终端运行的进程
-$ ps -aux 	 			# 列出 所有进程
-$ ps -ef       			# 显示所有命令,连带命令行
-$ ps -eo pid,ppid,sid,pgrp,nlwp,cmd,stat # 格式化输出
+$ ps   										# 查看 当前终端运行的进程
+$ ps -aux 	 								# 列出 所有进程
+$ ps -ef       								# 显示所有命令,连带命令行
+$ ps -eo pid,ppid,sid,pgrp,nlwp,cmd,stat 	# 格式化输出
+```
+
+- 其他
+
+```bash
 $ pstree 	  			# 查看 进程树
-$ top					# 任务管理器
+$ top					# 动态显示
 
 $ kill -KILL -<pgrp> 	# 发给进程组
 $ setsid 				# 创建一个新的会话
@@ -559,6 +630,99 @@ F S   UID     PID    PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
 # 调整nice值
 $ nice [-n niceness] cmd	# niceness [-19,20]
 $ renice [-n nicene] -p <pid> | -g <pgrp> | -u <user>
+```
+
+
+
+### 调度启动进程
+
+atd, crond 后台守护进程
+
+#### at
+
+定时运行一批程序
+
+单次执行任务
+
+用户执行权限配置文件:`/etc/at.allow` `/etc/at.deny`
+
+任务搜索目录: `/var/spool/at` (at创建的任务文件存储目录)
+
+> - 系统中有at.allow文件: 只有at.allow中的用户才可以使用at命令
+> - 两个文件有共同用户, at.allow优先级更高
+> - 系统中无at.allow文件: 除了at.deny中的用户都可以使用at命令
+> - 2个文件都不存在: 只有root才可以使用at命令
+
+```bash
+$ at [选项] [时间]
+$ -m				# 发送mail给用户
+$ -c <num>			# 查询 任务内容(/var/spool/at下的任务文件)
+$ -t 				# 指定 执行时间
+$ -q <a-z>			# 队列 优先级a-z从低到高
+$ -d				# 等价于atrm
+$ -l				# 等价于 atq
+$ -f <file>			# 执行脚本
+
+$ atrm <num>...		# 删除 作业队列中的任务
+$ atq				# 查看当前待执行的一次性计划任务
+```
+
+Example:
+
+```bash
+$ at now +1min			# 交互式(Ctrl+D退出)
+```
+
+
+
+#### crontab
+
+周期性运行一批程序（cron）
+
+​	首先cron命令会搜索/var/spool/cron目录，寻找以/etc/passwd文件中的用户名命名的crontab文件，被找到的这种文件将装入内存.
+
+​	搜索/etc/crontab文件
+
+​	crond 进程每分钟会定期检查是否有要执行的任务,如果有,则会自动执行该任务
+
+用户执行权限配置文件:`/etc/cron.allow` `/etc/cron.deny`
+
+crond扫描任务的目录:`/var/spool/cron/`
+
+系统级别配置任务:`/etc/crontab`
+
+日志文件:`/var/log/cron`	用户查看任务是否顺利执行
+
+**用户级别的计划任务**
+
+普通用户可以配置的任务, 以当前身份去执行
+
+``` bash
+$ crontab	# 创建(编辑)、查看、删除用户的周期性计划任务
+  $ -u 		# 设置 某个用户的cron服务(root)
+  $ -l		# 列出 某个用户cron服务的详细内容
+  $ -r		# 删除 某个用户的cron服务
+  $ -e		# 编辑 某个用户的cron服务
+```
+
+**系统级别的计划任务**
+
+crontab文件, root用户可以配置任何任务, 以任意用户身份去执行该任务
+
+```bash
+# crontab 文件格式
+# 分(0-59) 时(0-23) 日(1-31) 月(1-12) 周(0-6) 执行此命令的用户 命令
+# * * * * * username commands
+*  : 所有取值
+*/5: 每5个单位
+1-5: 从几到几
+1,3: 离散的数字
+
+# Example
+$ 0  17  *  *  1-5			# 周一到周五每天17:00
+$ 30  8  *  *1,3,5			# 每周一，三，五的8:30
+$ 0  8-18/2  *  * *			# 8点到18点间每隔两小时
+$ 1 10  */3  *  *			# 每隔3天的10点零1分执行
 ```
 
 
@@ -730,91 +894,6 @@ $ route del -net 192.168.77.0 netmask 255.255.255.0 dev ens33
 
 # nmcli 给连接添加静态路由
 $ nmcli connection modify static1 +ipv4.routes "192.168.77.0/24 192.168.72.2"
-```
-
-
-
-## 任务管理
-
-atd, crond 后台守护进程
-
-### at
-
-单次执行任务
-
-用户执行权限配置文件:`/etc/at.allow` `/etc/at.deny`
-
-任务搜索目录: `/var/spool/at` (at创建的任务文件存储目录)
-
-> - **系统中有at.allow文件: 只有at.allow中的用户才可以使用at命令**
-> - **两个文件有共同用户, at.allow优先级更高**
-> - **系统中无at.allow文件: 除了at.deny中的用户都可以使用at命令**
-> - **2个文件都不存在: 只有root才可以使用at命令**
-
-```bash
-$ at [选项] [时间]
-$ -m				# 发送mail给用户
-$ -c <num>			# 查询 任务内容(/var/spool/at下的任务文件)
-$ -t 				# 指定 执行时间
-$ -q <a-z>			# 队列 优先级a-z从低到高
-$ -d				# 等价于atrm
-$ -l				# 等价于 atq
-$ -f <file>			# 执行脚本
-
-$ atrm <num>...		# 删除 作业队列中的任务
-$ atq				# 查看当前待执行的一次性计划任务
-```
-
-Example:
-
-```bash
-$ at now +1min			# 交互式(Ctrl+D退出)
-```
-
-### crontab
-
-创建（编辑）、查看、删除用户的周期性计划任务
-
-crond 进程每分钟会定期检查是否有要执行的任务,如果有,则会自动执行该任务
-
-用户执行权限配置文件:`/etc/cron.allow` `/etc/cron.deny`
-
-crond扫描任务的目录:`/var/spool/cron/`
-
-系统级别配置任务:`/etc/crontab`
-
-日志文件:`/var/log/cron`	用户查看任务是否顺利执行
-
-**用户级别的计划任务**
-
-普通用户可以配置的任务, 以当前身份去执行
-
-``` bash
-$ crontab
-$ -u 		# 设置 某个用户的cron服务(root)
-$ -l		# 列出 某个用户cron服务的详细内容
-$ -r		# 删除 某个用户的cron服务
-$ -e		# 编辑 某个用户的cron服务
-```
-
-**系统级别的计划任务**
-
-root用户可以配置任何任务, 以任意用户身份去执行改任务
-
-```bash
-# crontab 文件格式
-# 分(0-59) 时(0-23) 日(1-31) 月(1-12) 周(0-6) 执行此命令的用户 命令
-# * * * * * username cmd
-*  : 所有取值
-*/5: 每5个单位
-1-5: 从几到几
-1,3: 离散的数字
-
-# Example
-$ 0  17  *  *  1-5			# 周一到周五每天17:00
-$ 30  8  *  *1,3,5			# 每周一，三，五的8:30
-$ 0  8-18/2  *  * *			# 8点到18点间每隔两小时
-$ 1 10  */3  *  *			# 每隔3天的10点零1分执行
 ```
 
 
@@ -1081,6 +1160,77 @@ awk '
 
 
 
+## 语言环境
+
+​	通过`localectl`修改系统的语言环境，对应的参数设置保存在/etc/locale.conf文件中。这些参数会在系统启动过程中被systemd的守护进程读取。修改后需要重新登录或者在root权限下执行`source /etc/locale.conf`命令刷新配置文件，使修改生效。
+
+### localectl
+
+```bash
+$ localectl status				# 显示当前语言环境设置
+
+$ localectl list-locales		# 列出可用的语言环境
+$ localectl set-locale LANG=<>  # 设置语言环境
+
+$ localectl list-keymaps		# 列出可用的键盘布局
+$ localectl set-keymap <>		# 设置键盘布局
+```
+
+### datetimectl
+
+NTP网络时间协议(Network Time Protocol)
+
+```bash
+$ timedatectl							# 显示日期和时间
+
+$ dnf install ntp && systemctl status ntpd
+$ timedatectl set-ntp <BOOL>			# 启动或关闭网络时间同步
+
+$ timedatectl set-time 'YYYY-MM-DD'		# 修改日期
+$ timedatectl set-time 'HH:MM:SS'		# 修改时间
+
+$ timedatectl list-timezones			# 显示当前可用时区
+$ timedatectl set-timezone <time_zone>	# 修改时区
+```
+
+### date
+
+```bash
+$ date 						# 显示本地时间
+$ date --utc				# 显示UTC时间
+$ date +"format"			# 格式化输出
+$ date +"%Y-%m-%d %H:%M"	# 2023-11-26 00:06
+$ date --set HH:MM:SS
+$ date --set YYYY-MM-DD
+  # %Y 年份（比如1970、1996等）
+  # %m 月份（01～12）
+  # %d 按月计的日期（01～31）
+  # %H 小时，24小时制（00~23）
+  # %M 分（00～59）
+  # %S 秒（00～59)
+  # %D 日期（mm/dd/yy）
+  # %y 年份的最后两个数字（1999则是99）
+ 
+```
+
+### hwlock
+
+Linux 将时钟分为：
+
+- 系统时钟 (System Clock) ：当前Linux Kernel中的时钟。
+- 硬件时钟 RTC：主板上由电池供电的主板硬件时钟
+
+当Linux启动时，会读取硬件时钟，并根据硬件时间来设置系统时间。
+
+设置硬件时钟RTC (Real Time Clock)
+
+```bash
+$ hwclock					# 显示当前硬件的日期和时间
+$ hwclock --set --date "dd mm yyyy HH:MM"
+```
+
+
+
 # 其他
 
 Linux内核的许可证协议是GPL
@@ -1106,27 +1256,69 @@ openEuler是Linux社区发行版
 - 木兰宽松许可证(MulanPSL V2) 不具有传染性, 可独占
 - GPL(GNU Public License) 具有传染性
 
-## etc
+
+
+### tar
+
+归档压缩
 
 ```bash
-$ /etc/shells		# 可用shell列表
-$ /etc/os-release	# 系统信息
-$ /etc/sudoers 		# sudo 权限的配置
-$ /etc/os-release 	# 操作系统的版本信息
+$ tar
+  -c --create
+  -x --extract 			# extract files from an archive
+  -t --list				# list the contents of an archive
+  -v --verbose
+  -f --file=ARCHIVE
+Compression:
+  -j --bzip2
+  -J --xz
+  -z --gzip
+  -Z --compress
 ```
+
+> tar和zip既打包又压缩, gzip,xz,bzip只压缩
+
+### PS1
+
+提示符(Prompt String)
+
+```bash
+\u：当前用户的用户名。
+\h：当前主机的主机名。
+\w：当前工作目录的绝对路径。
+\n：换行符。
+\t：当前时间的24小时制，格式为“小时：分钟：秒”。
+\e：ASCII转义字符。
+\033：与\e相同的ASCII转义字符。
+[：开始一个非打印字符序列，例如终端颜色代码。
+]：结束一个非打印字符序列。
+```
+
+### samba
+
+常用命令:smbpasswd,smbclient,smbmount,testparm
+
+```bash
+```
+
+
+
+
 
 `&>` `&|`: 标准输出和标准错误一起
 
 步长为2: echo{1..10..2}
 
-tar和zip既打包又压缩, gzip,sz,bzip只压缩
+
 
 find /var/weblogs -mtime +30 -delete
-
-file: 查看文件类型
 
 ulimit -a
 
 划分swap分区
 
 parted的使用
+
+- 执行一个脚本必须要有rx权限
+
+- whatis, file, type,

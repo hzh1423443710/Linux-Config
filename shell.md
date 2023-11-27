@@ -81,7 +81,7 @@ echo "$*"       # 所有命令行参数的字符串
 
 检查条件是否成立
 
-test + condition + ... 或者 [ condition + ] 
+`test + condition + ...` 或者 `[ condition + ]` 
 
 > 第二种写法condition两侧一定要加空格
 
