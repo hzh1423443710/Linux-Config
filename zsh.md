@@ -1,17 +1,68 @@
+# Shell
+
+## Zsh
+
+**安装zsh oh-my-zsh**
+
+```sh
+sudo apt install zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+```
+
+```sh
+vim ~/.zshrc
+# 修改主题
+ZSH_THEME="robbyrussell"
+# 修改插件
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
+source .zshrc
+```
+
+**管理插件**
+
+- https://github.com/zsh-users/zsh-syntax-highlighting
+
+```bash
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+
+- https://github.com/zsh-users/zsh-autosuggestions
+
+```bash
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+```
+
+- https://github.com/zsh-users/zsh-completions
+
+```bash
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+# Add it to `FPATH` in your `.zshrc` before `source "$ZSH/oh-my-zsh.sh"`:
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+```
+
+- https://github.com/ael-code/zsh-colored-man-pages
+
+```bash
+git clone https://github.com/ael-code/zsh-colored-man-pages ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-colored-man-pages
+```
+
+###### 
+
+## Shell
+
+> shell脚本第一行:#!/bin/bash 告诉bash使用bash解释脚本,而不是shell
+
 let
 
 expr
 
-# Shell
-
-> shell脚本第一行:#!/bin/bash 告诉bash使用bash解释脚本,而不是shell
-
-## 变量
+### 变量
 
 ```bash
 #!/bin/bash
-# 定义变量
-a=1 # 不能有空格
+# 定义变量(不能有空格)
+a=1
 
 # 算术运算
 echo $[2**10]
@@ -34,13 +85,13 @@ echo "$@"       # 命令行参数列表
 echo "$*"       # 所有命令行参数的字符串
 ```
 
-### 变量修饰
+**变量修饰**
 
 - `readonly` :修饰变量只读不可修改
 - `unset` :将变量置为空
 - `declarer -i` :修饰变量为整数,否则它为字符串
 
-### 内部变量
+**内部变量**
 
 - `$#` :传递给shell脚本的参数数量
 
@@ -60,7 +111,7 @@ echo "$*"       # 所有命令行参数的字符串
 
   > shell里可以直接使用bash的环境变量，bash中定义一个新的环境变量，shell脚本中也可以得到
 
-### 变量判断
+**变量判断**
 
 - `{num:-val}`
 
@@ -70,12 +121,16 @@ echo "$*"       # 所有命令行参数的字符串
 
 > ​	如果num存在，整个表达式的值为num，否则为val，并且把val赋值给num
 
+
+
 ### 字符串操作
 
 - `${#str}` :字符串**长度**
 
 - `${str:n:m}` :从str的第n个字符**提取**m个（不会修改str）
 - `${str/old/new}` 和 `${str//old/new}`:替换str的第一个 替换str的每一个
+
+
 
 ## 判断语句
 
@@ -85,7 +140,9 @@ echo "$*"       # 所有命令行参数的字符串
 
 > 第二种写法condition两侧一定要加空格
 
-### 文件判断
+
+
+**文件判断**
 
 - `-e` :判断文件是否存在
 - `-d` :判断是否为目录
@@ -94,15 +151,17 @@ echo "$*"       # 所有命令行参数的字符串
 - `-w  ` :可写
 - `-x` :可执行
 
-### 字符串判断
 
-**比较必须加双引号**，否则坑会出错
+
+**字符串判断**
+
+**比较必须加双引号**，否则可能会出错
 
 - `-z` :(zero)空串
 
 - `-n` :(not zero)不是空串
 
--  `==` :相等) 
+- `==` :相等) 
 
 - `!=` :不等
 
@@ -110,7 +169,9 @@ echo "$*"       # 所有命令行参数的字符串
 >
 > test -n "$str0"
 
-### 数值判断
+
+
+**数值判断**
 
 |          | 英文单词      | 条件 |
 | -------- | ------------- | ---- |
@@ -121,7 +182,9 @@ echo "$*"       # 所有命令行参数的字符串
 | 小于     | less          | -l   |
 | 小于等于 | less than     | -lt  |
 
-### 逻辑判断
+
+
+**逻辑判断**
 
 - `!`  :逻辑非
 - `-a` :and逻辑与
@@ -130,15 +193,17 @@ echo "$*"       # 所有命令行参数的字符串
 - `||` :或
 - `&&` :且
 
+
+
 ## 控制语句
 
 `read` : read num
 
 `read -p`:read -p "please a number:" num
 
+### if
 
-
-### if-elif-else-fi
+**if-elif-else-fi**
 
 ```bash
 echo "if else 语句"
@@ -164,7 +229,9 @@ fi
 
 
 
-### case-esac
+### case
+
+**case-esac**
 
 ```shell
 read -p "Please a score:" score
@@ -221,6 +288,8 @@ do
 done
 ```
 
+
+
 ### while
 
 example1:
@@ -259,6 +328,8 @@ do
     `sleep 1`
 done
 ```
+
+
 
 ### until
 
@@ -319,6 +390,3 @@ function add() {
 ret=$( add 1 2 3 4 5 6 7 8 9 10 )
 echo "1+..+10 = $ret"
 ```
-
-
-

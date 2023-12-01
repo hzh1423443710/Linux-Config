@@ -2,6 +2,14 @@
 
 ### 启动到 live 环境
 
+### 设置字体
+
+```bash
+$ setfont /usr/share/kbd/consolefonts/latarcyrheb-sun32.psfu.gz
+```
+
+
+
 ### 验证引导模式
 
 ```bash
@@ -12,11 +20,28 @@ $ ls /sys/firmware/efi/efivars
 
 ### 连接到互联网
 
+#### wifi
+
+```bash
+$ rfkill list # 检查wifi功能是否锁定
+$ rfkill unlock wifi
+
+$ ip link # 查看网卡
+$ ip link set <wlan> up
+
+$ iwctl	
+ $ station <wlan> scan
+ $ station <wlan> get-networks
+ $ station <wlan> connect <name>
+```
+
+
+
 ### 更新系统时间
 
 ```bash
-$ timedatectl set-ntp true	# 启用ntp自动同步时间
-$ timedatectl status		# 查看当前系统的日期、时间和时区设置
+$ timedatectl set-ntp true	# 启用 ntp自动同步时间
+$ timedatectl status		# 查看 当前系统的日期、时间和时区设置
 ```
 
 ### 磁盘分区
@@ -52,7 +77,7 @@ $ mount /dev/efi_system_partition /mnt/boot
 $ swapon /dev/sda3
 ```
 
-
+###### 
 
 ## Installation
 
@@ -60,18 +85,39 @@ $ swapon /dev/sda3
 
 [archlinux | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/archlinux/)
 
+编辑 `/etc/pacman.d/mirrorlist`，在文件的最顶端添加：
+
+```bash
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+```
+
+```bash
+pacman -Syyu
+```
+
 [archlinuxcn | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/archlinuxcn/)
+
+使用方法：在 `/etc/pacman.conf` 文件末尾添加以下两行：
+
+```bash
+[archlinuxcn]
+Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
+```
+
+```bash
+pacman -Sy archlinuxcn-keyring
+```
 
 
 
 ### 安装必需的软件包
 
 ```bash
-$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager 
+$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh
 $ pacstrap /mnt man-db man-pages git 
 ```
 
-
+###### 
 
 ## Configure the system
 
@@ -111,11 +157,12 @@ $ vim /home/hzh/.bashrc # 修改用户的LANG=zh_CN.UTF8
 ### 网络配置
 
 ```bash
-$ pacman -S networkmanager openssh
+$ pacman -S networkmanager wireless_tools
 $ systemctl enable NetworkManager
 $ systemctl enable sshd
 # 修改主机名
 $ vim /etc/hostname
+$ hostnamectl set-hostname <name>
 ```
 
 ### 设置 root 密码
@@ -140,15 +187,14 @@ $ pacman -S intel-ucode
 
 ```bash
 $ pacman -S grub efibootmgr
-$ grub-install --target=x86_64-efi --bootloader-id=grub	# 在新挂载的 EFI 系统分区中安装 GRUB
+$ pacman -S os-prober
+$ grub-install --target=x86_64-efi --efi-directory=<> --bootloader-id=grub	# 在新挂载的 EFI 系统分区中安装 GRUB
 $ grub-mkconfig -o /boot/grub/grub.cfg					# 生成 GRUB 配置文件
 ```
 
 > `grub-install`会自动寻找可用的EFI系统分区并将GRUB引导加载程序安装到该分区中
->
-> 如果与其他操作系统一起安装，还需要 `os-prober` 包
 
-### 重新启动计算机
+### 重启
 
 ```bash
 $ exit				# 退出 chroot 环境
@@ -158,7 +204,7 @@ $ reboot
 
 
 
-## Pre-installation
+## Post-installation
 
 ### 桌面环境
 
@@ -213,7 +259,7 @@ $ pacman -S noto-fonts-cjk		# 更丰富
 - 中文输入法
 
 ```bash
-$ pacman -S fcitx5 fcitx5-gtk fcitx5-qt fcitx5-configtool	# 输入法框架
+$ pacman -S fcitx5-im										# 输入法框架
 $ pacman -S fcitx5-chinese-addons							# 中文引擎
 $ pacman -S fcitx5-pinyin-zhwiki							# 词库
 $ pacman -S fcitx5-breeze 									# breeze主题
@@ -228,7 +274,7 @@ fcitx5 fcitx5-gtk fcitx5-qt fcitx5-configtool fcitx5-chinese-addons fcitx5-pinyi
 # vim ~/.xprofile
 export LANG=zh_CN.UTF-8
 export LANGUAGE=zh_CN:en_US
-
+# vim ~/.xprofile或/etc/environment
 export GTK_IM_MODULE=fcitx5
 export QT_IM_MODULE=fcitx5
 export XMODIFIERS="@im=fcitx5"
