@@ -243,6 +243,7 @@ $ pacman -S network-manager-applet		# 网络管理器 托盘+编辑器
 
 ```bash
 $ pacman -S pavucontrol pulseaudio
+$ pacman -S alsa-utils
 ```
 
 ### 中文本地化
