@@ -92,7 +92,7 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
 ```
 
 ```bash
-pacman -Syyu
+$ pacman -Syyu
 ```
 
 [archlinuxcn | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/archlinuxcn/)
@@ -105,7 +105,13 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 ```
 
 ```bash
-pacman -Sy archlinuxcn-keyring
+$ pacman -Sy archlinuxcn-keyring
+```
+
+安装yay
+
+```bash
+$ pacman -Sy yay
 ```
 
 
@@ -226,16 +232,20 @@ $ pacman -S xf86-video-intel
 
 ```bash
 $ pacman -S xfce4 xfce4-goodies
-```
-
-```bash
 # lightdm
 $ pacman -S lightdm lightdm-gtk-greeter	# 显示管理器
 $ systemctl enable lightdm				# 自启动
 $ pacman -S network-manager-applet		# 网络管理器 托盘+编辑器
 ```
 
-> 除了装lightdm,还需要一个greeter[LightDM - Arch Linux 中文维基 (archlinuxcn.org)](https://wiki.archlinuxcn.org/wiki/LightDM)
+4. 安装 KDE
+
+```bash
+$ pacman -S plasma 						# kde-applications挑软件
+$ systemctl enable sddm
+
+$ dolphin 
+```
 
 
 
@@ -246,25 +256,32 @@ $ pacman -S pavucontrol pulseaudio
 $ pacman -S alsa-utils
 ```
 
-### 中文本地化
+### 中文
 
 [中文本地化 - Arch Linux 中文维基 (archlinuxcn.org)](https://wiki.archlinuxcn.org/wiki/中文本地化)
 
 - 中文字体
 
 ```bash
-$ pacman -S wqy-microhei		# 中文字体
-$ pacman -S noto-fonts-cjk		# 更丰富
+$ pacman -S noto-fonts noto-fonts-cjk
+$ noto-fonts-emoji noto-fonts-extra
 ```
 
 - 中文输入法
 
 ```bash
+# 1.
 $ pacman -S fcitx5-im										# 输入法框架
 $ pacman -S fcitx5-chinese-addons							# 中文引擎
 $ pacman -S fcitx5-pinyin-zhwiki							# 词库
+$ yay -S fcitx5-pinyin-sougou								# 词库
 $ pacman -S fcitx5-breeze 									# breeze主题
-fcitx5 fcitx5-gtk fcitx5-qt fcitx5-configtool fcitx5-chinese-addons fcitx5-pinyin-zhwiki fcitx5-breeze
+# 2.安装 fcitx5-input-support (AUR) 或者编辑 /etc/environment 并添加以下几行
+GTK_IM_MODULE=fcitx
+QT_IM_MODULE=fcitx
+XMODIFIERS=@im=fcitx
+SDL_IM_MODULE=fcitx
+GLFW_IM_MODULE=ibus
 ```
 
 - 显示中文
@@ -291,12 +308,18 @@ export XMODIFIERS="@im=fcitx5"
 
 ```bash
 $ pacman -S							# 安装
-$ pacman -Rsn 						# 同事删除依赖 不保存其配置文件
+$ pacman -Rsn 						# 移除 包 并删除依赖 不保存其配置文件
 $ pacman -Syu						# 升级
-$ pacman -Ss rust					# 搜索软件包
-$ pacman -Qs rust					# 查询软件包是否安装
+$ pacman -Ss rust					# 搜索 软件包
+$ pacman -Qs rust					# 查询 软件包是否安装
+$ pacman -Qo <path>					# 查询 文件属于哪个包
+```
 
-$ pacman -Sy yay					# 从 Arch Linux CN 源安装yay
-$ pacman -Sy archlinuxcn-keyring	# 导入 GPG key
+
+
+### 虚拟机
+
+```bash
+$ open-vm-tools
 ```
 
