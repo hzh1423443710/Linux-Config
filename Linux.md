@@ -754,7 +754,7 @@ $ 0  8-18/2  *  * *			# 8点到18点间每隔两小时
 $ 1 10  */3  *  *			# 每隔3天的10点零1分执行
 ```
 
-###### 
+
 
 ## 网络管理
 
@@ -1317,18 +1317,18 @@ $ date --set YYYY-MM-DD
 Linux 将时钟分为：
 
 - 系统时钟 (System Clock) ：当前Linux Kernel中的时钟。
-- 硬件时钟 RTC：主板上由电池供电的主板硬件时钟
+- 硬件时钟 RTC (Real Time Clock)：主板上由电池供电的主板硬件时钟
 
 当Linux启动时，会读取硬件时钟，并根据硬件时间来设置系统时间。
 
-设置硬件时钟RTC (Real Time Clock)
-
 ```bash
-$ hwclock                    # 显示当前硬件的日期和时间
+$ hwclock				# 查看 当前硬件的日期和时间
+$ hwclock --systohc		# 设置RTC与系统时钟一致
+$ hwclock --hctosys		# 设置系统时钟与RTC一致
 $ hwclock --set --date "dd mm yyyy HH:MM"
 ```
 
-###### 
+ 
 
 ## etc配置文件
 

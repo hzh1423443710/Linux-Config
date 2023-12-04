@@ -20,7 +20,7 @@ $ ls /sys/firmware/efi/efivars
 
 ### 连接到互联网
 
-#### wifi
+#### wifi连接
 
 ```bash
 $ rfkill list # 检查wifi功能是否锁定
@@ -77,7 +77,7 @@ $ mount /dev/efi_system_partition /mnt/boot
 $ swapon /dev/sda3
 ```
 
-###### 
+
 
 ## Installation
 
@@ -123,7 +123,7 @@ $ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager ope
 $ pacstrap /mnt man-db man-pages git 
 ```
 
-###### 
+
 
 ## Configure the system
 
@@ -145,6 +145,8 @@ $ arch-chroot /mnt
 
 ```bash
 $ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# 或
+$ timedatectl set-timezone Asia/Shanghai
 ```
 
 ### 本地化
@@ -212,6 +214,15 @@ $ reboot
 
 ## Post-installation
 
+### 关闭终端响铃
+
+```bash
+# vim /etc/inputrc 
+set bell-style none # 取消 注释
+```
+
+
+
 ### 桌面环境
 
 1. 要在系统上运行带有图形用户界面的程序，需要安装 X Window System 实现。最常见的是 Xorg。
@@ -263,20 +274,17 @@ $ pacman -S alsa-utils
 - 中文字体
 
 ```bash
-$ pacman -S noto-fonts noto-fonts-cjk
-$ noto-fonts-emoji noto-fonts-extra
+$ pacman -S noto-fonts noto-fonts-cjk noto-fonts-emoji
 ```
 
 - 中文输入法
 
 ```bash
-# 1.
-$ pacman -S fcitx5-im										# 输入法框架
-$ pacman -S fcitx5-chinese-addons							# 中文引擎
-$ pacman -S fcitx5-pinyin-zhwiki							# 词库
-$ yay -S fcitx5-pinyin-sougou								# 词库
-$ pacman -S fcitx5-breeze 									# breeze主题
-# 2.安装 fcitx5-input-support (AUR) 或者编辑 /etc/environment 并添加以下几行
+# 1.输入法框架 中文引擎 wiki词库 主题
+$ pacman -S fcitx5-im fcitx5-chinese-addons fcitx5-pinyin-zhwiki fcitx5-material-color
+$ yay -S fcitx5-pinyin-sougou	# 搜狗词库
+# 2.安装 fcitx5-input-support (AUR) 
+# 或者编辑 /etc/environment 并添加以下几行
 GTK_IM_MODULE=fcitx
 QT_IM_MODULE=fcitx
 XMODIFIERS=@im=fcitx
@@ -292,10 +300,6 @@ GLFW_IM_MODULE=ibus
 # vim ~/.xprofile
 export LANG=zh_CN.UTF-8
 export LANGUAGE=zh_CN:en_US
-# vim ~/.xprofile或/etc/environment
-export GTK_IM_MODULE=fcitx5
-export QT_IM_MODULE=fcitx5
-export XMODIFIERS="@im=fcitx5"
 ```
 
 
@@ -310,9 +314,10 @@ export XMODIFIERS="@im=fcitx5"
 $ pacman -S							# 安装
 $ pacman -Rsn 						# 移除 包 并删除依赖 不保存其配置文件
 $ pacman -Syu						# 升级
-$ pacman -Ss rust					# 搜索 软件包
-$ pacman -Qs rust					# 查询 软件包是否安装
+$ pacman -Ss <pkg>					# 搜索 软件包
+$ pacman -Qs <pkg>					# 查询 软件包是否安装
 $ pacman -Qo <path>					# 查询 文件属于哪个包
+$ pacman -Si <pkg>					# 查看 包信息
 ```
 
 
