@@ -1398,7 +1398,7 @@ $ [：开始一个非打印字符序列，例如终端颜色代码。
 $ ]：结束一个非打印字符序列。
 ```
 
-###### 
+
 
 # 其他
 
@@ -1445,11 +1445,11 @@ parted的使用
 
 ## GCC GDB
 
-[GCC GDB](./gcc_gdb.md)
+[GCC GDB](./Linux/gcc_gdb.md)
 
 ## vim
 
-[init.vim](./init.vim)
+[init.vim](./Linux/init.vim)
 
 ## git
 
@@ -1457,11 +1457,11 @@ parted的使用
 
 ## Shell
 
-[shell脚本,zsh配置](./zsh.md)
+[shell脚本 zsh配置](./Linux/zsh.md)
 
 ## 部署服务
 
-[部署服务](./deploy_service.md)
+[部署服务](./Linux/deploy_service.md)
 
 
 

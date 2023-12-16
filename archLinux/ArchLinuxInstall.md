@@ -1,11 +1,13 @@
-## Pre-installation
+## 1.Pre-installation
 
 ### 启动到 live 环境
+
+禁用安全启动:Arch Linux 安装镜像不支持 UEFI 安全启动（Secure Boot）功能
 
 ### 设置字体
 
 ```bash
-$ setfont /usr/share/kbd/consolefonts/latarcyrheb-sun32.psfu.gz
+$ setfont /usr/share/kbd/consolefonts/ter-* # 数字越大字体越大 b代表加粗
 ```
 
 
@@ -55,31 +57,40 @@ $ fdisk -l
 $ cfdisk	# 为基于 UEFI 的系统选择 gpt
 ```
 
-|    挂载点     |           分区            |        分区类型         |
-| :-----------: | :-----------------------: | :---------------------: |
-| /mnt/boot/efi | /dev/efi_system_partition |      EFI 系统分区       |
-|    [SWAP]     |   /dev/*swap_partition*   |  Linux swap (交换空间)  |
-|     /mnt      |    /dev/root_partition    | Linux x86-64 根目录 (/) |
+**对于 UEFI 与 GPT 分区表的磁盘分区方案:**
+
+|  挂载点   |            分区             |        分区类型         |
+| :-------: | :-------------------------: | :---------------------: |
+| /mnt/boot | */dev/efi_system_partition* |      EFI 系统分区       |
+|  [SWAP]   |    */dev/swap_partition*    |  Linux swap (交换空间)  |
+|   /mnt    |    */dev/root_partition*    | Linux x86-64 根目录 (/) |
+
+**对于传统 BIOS 与 MBR 分区表的磁盘分区方案:**
+
+|  挂载点  |         分区          |       分区类型        |
+| :------: | :-------------------: | :-------------------: |
+| `[SWAP]` | */dev/swap_partition* | Linux swap (交换空间) |
+|  `/mnt`  | */dev/root_partition* |         Linux         |
 
 ### 格式化分区
 
 ```bash
-$ mkfs.fat -F32 /dev/sda1	# EFI 系统分区[EFI System]
-$ mkfs.ext4 /dev/sda2		# root分区
-$ mkswap /dev/sda3			# 交换分区
+$ mkfs.fat -F32 /dev/efi_system_partition
+$ mkfs.ext4 /dev/root_partition
+$ mkswap /dev/*swap_partition
 ```
 
 ### 挂载分区
 
 ```bash
-$ mount /dev/sda2 /mnt
+$ mount /dev/root_partition /mnt
 $ mount /dev/efi_system_partition /mnt/boot
-$ swapon /dev/sda3
+$ swapon /dev/swap_partition
 ```
 
 
 
-## Installation
+## 2.Installation
 
 ### 配置国内源
 
@@ -118,18 +129,19 @@ $ pacman -Sy yay
 
 ### 安装必需的软件包
 
+在安装盘挂载点 /mnt 目录下安装基本软件包
+
 ```bash
-$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh
-$ pacstrap /mnt man-db man-pages git 
+$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git 
 ```
 
 
 
-## Configure the system
+## 3.Configure the system
 
 ### 生成fstab
 
-`genfstab` 程序可以检测给定挂载点以下的所有当前挂载
+`genfstab` 程序可以检测给定挂载点以下的所有当前挂载(用 `-U` 或 `-L` 选项设置 UUID 或卷标):
 
 ```bash
 $ genfstab -U /mnt >> /mnt/etc/fstab
@@ -145,8 +157,12 @@ $ arch-chroot /mnt
 
 ```bash
 $ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-# 或
-$ timedatectl set-timezone Asia/Shanghai
+```
+
+然后运行 hwclock 以生成 `/etc/adjtime`：
+
+```bash
+$ hwclock --systohc
 ```
 
 ### 本地化
@@ -158,9 +174,7 @@ $ vim /etc/locale.conf	# LANG=zh_CN.UTF8 全局配置
 $ vim /home/hzh/.bashrc # 修改用户的LANG=zh_CN.UTF8
 ```
 
-> **本地tty不能显示中文(中文会变成方块)**
->
-> **远程pts可以正常显示中文**
+> **本地tty不能显示中文(中文会变成方块) 远程pts可以正常显示中文**
 
 ### 网络配置
 
@@ -170,7 +184,6 @@ $ systemctl enable NetworkManager
 $ systemctl enable sshd
 # 修改主机名
 $ vim /etc/hostname
-$ hostnamectl set-hostname <name>
 ```
 
 ### 设置 root 密码
@@ -194,13 +207,15 @@ $ pacman -S intel-ucode
 ​	为了启动 Arch Linux，必须配置一个与 Linux 兼容的引导加载程序。引导加载程序负责在初始化启动进程之前，加载好内核和 initial ramdisk
 
 ```bash
-$ pacman -S grub efibootmgr
-$ pacman -S os-prober
-$ grub-install --target=x86_64-efi --efi-directory=<> --bootloader-id=grub	# 在新挂载的 EFI 系统分区中安装 GRUB
-$ grub-mkconfig -o /boot/grub/grub.cfg					# 生成 GRUB 配置文件
+# 1.
+$ pacman -S grub efibootmgr os-prober
+# 2.生成/boot/EFI/GRUB/grubx64.efi 和 /boot/grub/
+$ grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB
+# 3.生成 GRUB 配置文件
+$ grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-> `grub-install`会自动寻找可用的EFI系统分区并将GRUB引导加载程序安装到该分区中
+> 双系统需要修改 `/etc/default/grub`(grub软件自带) 中的 `GRUB_DISABLE_OS_PROBER=false`
 
 ### 重启
 
@@ -212,7 +227,17 @@ $ reboot
 
 
 
-## Post-installation
+## 4.Post-installation
+
+### tty字体
+
+```bash
+$ pacman -S terminus-font
+# 临时设置
+$ setfont /usr/share/kbd/consolefonts/ter-v28b.psf.gz
+# 持久化设置
+echo "FONT=ter-v28b" >> /etc/kconsole.conf
+```
 
 ### 关闭终端响铃
 
