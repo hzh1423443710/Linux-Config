@@ -119,6 +119,8 @@ Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 $ pacman -Sy archlinuxcn-keyring
 ```
 
+> 若签名错误在 [archlinuxcn] 后添加 SigLevel = Optional TrustAll 
+
 安装yay
 
 ```bash
@@ -236,7 +238,7 @@ $ pacman -S terminus-font
 # 临时设置
 $ setfont /usr/share/kbd/consolefonts/ter-v28b.psf.gz
 # 持久化设置
-echo "FONT=ter-v28b" >> /etc/kconsole.conf
+echo "FONT=ter-v28b" >> /etc/vconsole.conf
 ```
 
 ### 关闭终端响铃

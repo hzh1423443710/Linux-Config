@@ -1,53 +1,30 @@
 # Shell
 
-## Zsh
+## Zsh + Zim
 
-**安装zsh oh-my-zsh**
+安装 zsh 
 
 ```sh
 sudo apt install zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-sh -c "$(wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+sudo pacman install zsh
 ```
+
+安装 [Zim]([Home | Zim: Modular, customizable, and blazing fast Zsh framework (zimfw.sh)](https://zimfw.sh/))
+
+- Zim是一个Zsh配置框架，它捆绑了一个插件管理器zimfw、有用的module和各种各样的theme，而不影响速度。
 
 ```sh
-vim ~/.zshrc
-# 修改主题
-ZSH_THEME="robbyrussell"
-# 修改插件
-plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
-source .zshrc
+# 1.修改默认shell为zsh
+# 2.cat install.zsh | zsh
+wget -nv -O - https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
 ```
 
-**管理插件**
+- 安装 zim 的 module
 
-- https://github.com/zsh-users/zsh-syntax-highlighting
+1. 添加模块到`~/.zimrc` 中, 如`zmodule sorin` 主题
+2. 执行 `zimfw install` 安装
 
-```bash
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-```
 
-- https://github.com/zsh-users/zsh-autosuggestions
-
-```bash
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-```
-
-- https://github.com/zsh-users/zsh-completions
-
-```bash
-git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
-# Add it to `FPATH` in your `.zshrc` before `source "$ZSH/oh-my-zsh.sh"`:
-fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
-```
-
-- https://github.com/ael-code/zsh-colored-man-pages
-
-```bash
-git clone https://github.com/ael-code/zsh-colored-man-pages ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-colored-man-pages
-```
-
-###### 
 
 ## Shell
 
