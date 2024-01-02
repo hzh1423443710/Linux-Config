@@ -1453,7 +1453,7 @@ parted的使用
 
 ## git
 
-[git](./git/git.md)
+[git](./git.md)
 
 ## Shell
 
