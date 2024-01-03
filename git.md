@@ -16,7 +16,7 @@ git commit -m [message]		将暂存区内容添加到版本库
 ## config
 
 ```bash
-git config [--global]						global配置全局, 无global配置当前仓库
+git config [--global] --list				global配置全局, 无global配置当前仓库
 git config --global user.name <>			配置 全局用户名
 git config --global user.email <>			配置 全局邮箱
 
@@ -93,8 +93,27 @@ git restore --source=<commit> <file>  还原文件到指定提交的状态
 
 ## rebase
 
+将当前分支上的提交应用到另一个分支上, 并合并这些提交
+
+会使提交树变得很干净, 所有的提交都在一条线上
+
 ```bash
 git rebase <target_branch>  将当前分支上的提交逐个应用到目标分支上
+git rebase -i <target_branch> 交互式可选择排序
+
+git rebase branch1 branch2	将 branch2 分支基于 branch1 分支进行重新排列合并
+```
+
+> git rebase branch1 branch2 等价于git switch branch2 + git rebase branch1
+
+
+
+### cherry-pick
+
+将指定提交 拷贝 到当前分支中, 不合并
+
+```bash
+git cherry-pick <commit> ...
 ```
 
 
@@ -169,7 +188,10 @@ git checkout -- <file>			 恢复工作区到最近一次提交, 不修改暂存�
 ```bash
 git checkout HEAD^			切换到 上个提交(分离HEAD指针)
 git checkout master^			切换到 上个提交(分离HEAD指针)
+git checkout HEAD~				切换到 上个提交(分离HEAD指针)
 git checkout ~<num>
+
+git checkout HEAD~^2~			先HEAD~, 找到第2个父提交, 再HEAD~
 ```
 
 > **分离头指针状态:**
@@ -183,6 +205,7 @@ git checkout ~<num>
 ```bash
 git switch <branch>			切换分支
 git switch -c <branch>		创建并切换分支
+git switch -				快速切换到上一个分支
 ```
 
 
@@ -199,3 +222,40 @@ git diff <commit> <commit>				 比较2次提交之间的差异
 git diff --stat ...      			 	 显示摘要而非整个diff 
 ```
 
+
+
+## fetch
+
+```bash
+git fetch					git fetch只更新远程分支 不修改本地分支
+git fetch origin <src>:<dst>
+git fetch origin :<branch>	 fetch 空 到本地, 会在本地创建一个新分支
+```
+
+> dst不存在会创建分支
+>
+> git fetch 没有参数: 下载所有的提交记录到各个远程分支
+
+
+
+## pull
+
+```bash
+git pull					等价于 git fetch + git merge origin/master
+git pull --rebase			 等价于 git fetch + git rebase origin/master
+git pull origin <src>:<dst>
+```
+
+> dst 分支不存在会创建, 然后git fetch origin/src, git merge dst
+
+
+
+## push
+
+```bash
+git push					将当前分支的本地提交推送到与之关联的远程分支
+git push origin <src>:<dst>   将本地src位置 提交到 远程dst分支
+git push origin :<branch>	  push 空到远程会删除branch分支
+```
+
+> dst不存在会创建
