@@ -355,3 +355,16 @@ $ pacman -Si <pkg>					# 查看 包信息
 $ open-vm-tools
 ```
 
+
+
+
+
+# 其他
+
+1. fcitx5 添加词库
+
+下载词库，将得到的词库文件（*.dict）放到`~/.local/share/fcitx5/pinyin/dictionaries/`目录下即可（若不存在则手动创建）。
+
+2. 快速输入
+
+用来输入表情，特殊字符。在fcitx5配置工具中设置快捷键
