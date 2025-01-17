@@ -1,13 +1,18 @@
+# Arch安装
+
+[安装指南 - Arch Linux 中文维基](https://wiki.archlinuxcn.org/wiki/安装指南)
+
 ## 1.Pre-installation
 
 ### 启动到 live 环境
 
 禁用安全启动:Arch Linux 安装镜像不支持 UEFI 安全启动（Secure Boot）功能
 
-### 设置字体
+### 设置控制台字体
 
 ```bash
 $ setfont /usr/share/kbd/consolefonts/ter-* # 数字越大字体越大 b代表加粗
+$ setfont ter-132b	# 使用最大字体
 ```
 
 
@@ -16,6 +21,7 @@ $ setfont /usr/share/kbd/consolefonts/ter-* # 数字越大字体越大 b代表�
 
 ```bash
 $ ls /sys/firmware/efi/efivars
+$ cat /sys/firmware/efi/fw_platform_size
 ```
 
 > **如果命令结果显示了目录且没有报告错误，则系统是以 UEFI 模式引导。如果目录不存在，则系统可能是BIOS模式**
@@ -48,47 +54,17 @@ $ timedatectl status		# 查看 当前系统的日期、时间和时区设置
 
 ### 磁盘分区
 
-- EFI 系统分区——用于存储 UEFI 固件所需的文件。
-- ROOT – 用于安装发行版本身。
-- SWAP – 用作内存交换分区。
+1. [创建硬盘分区](https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97#%E5%BB%BA%E7%AB%8B%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA)
+2. 格式化分区
+3. 挂载分区
 
 ```bash
+# 创建硬盘分区
 $ fdisk -l
-$ cfdisk	# 为基于 UEFI 的系统选择 gpt
+$ lsblk
+# 分区工具
+$ fdisk parted cfdisk
 ```
-
-**对于 UEFI 与 GPT 分区表的磁盘分区方案:**
-
-|  挂载点   |            分区             |        分区类型         |
-| :-------: | :-------------------------: | :---------------------: |
-| /mnt/boot | */dev/efi_system_partition* |      EFI 系统分区       |
-|  [SWAP]   |    */dev/swap_partition*    |  Linux swap (交换空间)  |
-|   /mnt    |    */dev/root_partition*    | Linux x86-64 根目录 (/) |
-
-**对于传统 BIOS 与 MBR 分区表的磁盘分区方案:**
-
-|  挂载点  |         分区          |       分区类型        |
-| :------: | :-------------------: | :-------------------: |
-| `[SWAP]` | */dev/swap_partition* | Linux swap (交换空间) |
-|  `/mnt`  | */dev/root_partition* |         Linux         |
-
-### 格式化分区
-
-```bash
-$ mkfs.fat -F32 /dev/efi_system_partition
-$ mkfs.ext4 /dev/root_partition
-$ mkswap /dev/*swap_partition
-```
-
-### 挂载分区
-
-```bash
-$ mount /dev/root_partition /mnt
-$ mount /dev/efi_system_partition /mnt/boot
-$ swapon /dev/swap_partition
-```
-
-
 
 ## 2.Installation
 
@@ -96,13 +72,15 @@ $ swapon /dev/swap_partition
 
 [archlinux | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/archlinux/)
 
-编辑 `/etc/pacman.d/mirrorlist`，在文件的最顶端添加：
-
 ```bash
+# 编辑 `/etc/pacman.d/mirrorlist`，在文件的最顶端添加：
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinux/$repo/os/$arch
+# 或 把清华源放到上面
+$ relector | grep tuna >> /etc/pacman.d/mirrorlist
 ```
 
 ```bash
+# 更新软件包缓存
 $ pacman -Syyu
 ```
 
@@ -134,7 +112,7 @@ $ pacman -Sy yay
 在安装盘挂载点 /mnt 目录下安装基本软件包
 
 ```bash
-$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git 
+$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git wget unzip
 ```
 
 
@@ -167,10 +145,10 @@ $ ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 $ hwclock --systohc
 ```
 
-### 本地化
+### [本地化](https://wiki.archlinuxcn.org/wiki/%E5%AE%89%E8%A3%85%E6%8C%87%E5%8D%97#%E5%8C%BA%E5%9F%9F%E5%92%8C%E6%9C%AC%E5%9C%B0%E5%8C%96%E8%AE%BE%E7%BD%AE)
 
 ```bash
-$ vim /etc/locale.gen	
+$ vim /etc/locale.gen		# 取消注释en_GB.UTF-8
 $ locale-gen			# 读取 /etc/locale.gen 文件并生成相应地语言环境
 $ vim /etc/locale.conf	# LANG=zh_CN.UTF8 全局配置
 $ vim /home/hzh/.bashrc # 修改用户的LANG=zh_CN.UTF8
@@ -184,7 +162,7 @@ $ vim /home/hzh/.bashrc # 修改用户的LANG=zh_CN.UTF8
 $ pacman -S networkmanager wireless_tools
 $ systemctl enable NetworkManager
 $ systemctl enable sshd
-# 修改主机名
+# 创建 hostname 文件,修改主机名
 $ vim /etc/hostname
 ```
 
@@ -212,7 +190,9 @@ $ pacman -S intel-ucode
 # 1.
 $ pacman -S grub efibootmgr os-prober
 # 2.生成/boot/EFI/GRUB/grubx64.efi 和 /boot/grub/
+# esp 表示EFI系统分区的挂载点(lslbk查看)
 $ grub-install --target=x86_64-efi --efi-directory=esp --bootloader-id=GRUB
+
 # 3.生成 GRUB 配置文件
 $ grub-mkconfig -o /boot/grub/grub.cfg
 ```
