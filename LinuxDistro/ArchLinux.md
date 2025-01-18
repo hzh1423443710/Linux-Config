@@ -70,6 +70,8 @@ $ fdisk parted cfdisk
 
 ### 配置国内源
 
+#### core和extra
+
 [archlinux | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/archlinux/)
 
 ```bash
@@ -84,28 +86,24 @@ $ relector | grep tuna >> /etc/pacman.d/mirrorlist
 $ pacman -Syyu
 ```
 
+#### aur
+
 [archlinuxcn | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirrors.tuna.tsinghua.edu.cn/help/archlinuxcn/)
 
-使用方法：在 `/etc/pacman.conf` 文件末尾添加以下两行：
+1. 在 `/etc/pacman.conf` 文件末尾添加以下两行：
 
-```bash
+```ini
 [archlinuxcn]
 Server = https://mirrors.tuna.tsinghua.edu.cn/archlinuxcn/$arch
 ```
 
+2. 然后执行
+
 ```bash
+$ pacman-key --lsign-key "farseerfc@archlinux.org"
 $ pacman -Sy archlinuxcn-keyring
+$ pacman -Sy yay								# 安装yay
 ```
-
-> 若签名错误在 [archlinuxcn] 后添加 SigLevel = Optional TrustAll 
-
-安装yay
-
-```bash
-$ pacman -Sy yay
-```
-
-
 
 ### 安装必需的软件包
 
@@ -114,8 +112,6 @@ $ pacman -Sy yay
 ```bash
 $ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git wget unzip
 ```
-
-
 
 ## 3.Configure the system
 

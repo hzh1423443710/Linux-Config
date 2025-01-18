@@ -6,25 +6,63 @@
 
 ```sh
 sudo apt install zsh
-sudo pacman install zsh
+sudo pacman -S zsh
 ```
 
-安装 [Zim]([Home | Zim: Modular, customizable, and blazing fast Zsh framework (zimfw.sh)](https://zimfw.sh/))
+```bash
+This is the Z Shell configuration function for new users,
+zsh-newuser-install.
+You are seeing this message because you have no zsh startup files
+(the files .zshenv, .zprofile, .zshrc, .zlogin in the directory
+~).  This function can help you with a few settings that should
+make your use of the shell easier.
+
+You can:
+
+(q)  Quit and do nothing.  The function will be run again next time.
+
+(0)  Exit, creating the file ~/.zshrc containing just a comment.
+     That will prevent this function being run again.
+
+(1)  Continue to the main menu.
+
+--- Type one of the keys in parentheses ---
+```
+
+
+
+安装 [Zim](https://zimfw.sh/docs/install/)
 
 - Zim是一个Zsh配置框架，它捆绑了一个插件管理器zimfw、有用的module和各种各样的theme，而不影响速度。
 
 ```sh
 # 1.修改默认shell为zsh
+$ chsh -s /bin/zsh
 # 2.cat install.zsh | zsh
-wget -nv -O - https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
+$ wget -nv -O - https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
 ```
 
-- 安装 zim 的 module
+```bash
+Arch% echo $https_proxy
+127.0.0.1:7890
+
+Arch% wget -nv -O - https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
+Prepended http:// to '127.0.0.1:7890'
+) Using Zsh version 5.9
+) ZIM_HOME not set, using the default one.
+2025-01-18 21:08:55 URL:https://raw.githubusercontent.com/zimfw/install/master/install.zsh [12029/12029] -> "-" [1]
+) Zsh is your default shell.
+) Downloaded the Zim script to /home/hzh/.zim/zimfw.zsh
+) Prepended Zim template to /home/hzh/.zimrc
+) Prepended Zim template to /home/hzh/.zshrc
+) Installed modules.
+All done. Enjoy your Zsh IMproved! Restart your terminal for changes to take effect.
+```
+
+- 安装 zim 的 [module]([Modules | Zim: Modular, customizable, and blazing fast Zsh framework](https://zimfw.sh/docs/modules/))
 
 1. 添加模块到`~/.zimrc` 中, 如`zmodule sorin` 主题
 2. 执行 `zimfw install` 安装
-
-
 
 ## Shell
 
