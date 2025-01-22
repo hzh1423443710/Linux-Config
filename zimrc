@@ -4,6 +4,11 @@
 # zimfw plugin manager.
 #
 
+#将 zsh 的默认完成选择菜单替换为 fzf
+zmodule Aloxaf/fzf-tab
+# 双击Esc 添加sudo
+zmodule ohmyzsh/ohmyzsh --root plugins/sudo
+
 #
 # Modules
 #
@@ -31,8 +36,8 @@ zmodule duration-info
 # Exposes git repository status information to prompts, used by asciiship.
 zmodule git-info
 # A heavily reduced, ASCII-only version of the Spaceship and Starship prompts.
-#zmodule asciiship
-zmodule sorin
+zmodule asciiship
+#zmodule sorin
 
 #
 # Completion
@@ -57,5 +62,6 @@ zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 # Fish-like autosuggestions for Zsh.
 zmodule zsh-users/zsh-autosuggestions
+
 # }}} End configuration added by Zim install
 
