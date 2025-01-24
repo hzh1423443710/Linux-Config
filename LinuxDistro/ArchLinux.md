@@ -315,12 +315,16 @@ export LANGUAGE=zh_CN:en_US
 
 ```bash
 $ pacman -S							# 安装
-$ pacman -Rsn 						# 移除 包 并删除依赖 不保存其配置文件
 $ pacman -Syu						# 升级
-$ pacman -Ss <pkg>					# 搜索 软件包
+$ pacman -Si <pkg>					# 查看包信息
+$ pacman -Ss <pkg>					# 从所有包中搜索
+
+$ pacman -Rsn 						# 移除 包 并删除依赖 不保存其配置文件
+
+# 从已知包中查询
 $ pacman -Qs <pkg>					# 查询 软件包是否安装
+$ pacman -Ql <pkg>					# 查询 软件包是否安装
 $ pacman -Qo <path>					# 查询 文件属于哪个包
-$ pacman -Si <pkg>					# 查看 包信息
 ```
 
 
