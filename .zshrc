@@ -89,6 +89,8 @@ ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
 #typeset -A ZSH_HIGHLIGHT_STYLES
 #ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
 
+
+
 # ------------------
 # Initialize modules
 # ------------------
@@ -128,3 +130,5 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
+
+alias ppp='eval "$(python3 ~/.script/toggle_proxy.py)"'

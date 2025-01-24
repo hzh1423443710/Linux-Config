@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # source proxy.sh
 if [ -z "$https_proxy" ]; then
     export http_proxy="127.0.0.1:7890"
