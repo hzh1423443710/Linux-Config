@@ -68,6 +68,8 @@ export http_proxy="127.0.0.1:7890"
 
 非图形化界面
 
+1. curl url
+
 ```bash
 # config.yaml中确保有以下
 external-controller: 127.0.0.1:9090	
@@ -85,5 +87,15 @@ http://127.0.0.1:9091/proxies 					   # 同上
 
 # 3.验证
 curl https://google.com/
+```
+
+2. download [clashcli_linux_amd64](https://github.com/shunf4/clashcli/tree/master)
+
+```bash
+# 选择代理组和代理节点
+$ ./clashcli_linux_amd64
+# 默认 <CLASH_SCHEME> <CLASH_ADDR> <CLASH_PORT> http://127.0.0.1:9090
+# 取决于config.yaml
+external-controller: 127.0.0.1:9090
 ```
 
