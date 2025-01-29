@@ -68,7 +68,11 @@ $ fdisk parted cfdisk
 
 ## 2.Installation
 
+### [镜像源]([镜像源 - Arch Linux 中文维基](https://wiki.archlinuxcn.org/wiki/镜像源))
+
 ### 配置国内源
+
+[Arch Linux - Pacman Mirrorlist Generator](https://archlinux.org/mirrorlist/)
 
 #### core和extra
 
@@ -110,8 +114,12 @@ $ pacman -Sy yay								# 安装yay
 在安装盘挂载点 /mnt 目录下安装基本软件包
 
 ```bash
-$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git wget unzip tree gdb fzf jq
+$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git wget unzip tree gdb fzf jq bind-tools
 ```
+
+- fzf：文件查找配合zmodule Aloxaf/fzf-tab
+- jq：json输出
+- bind-tools：dns工具，如`nslookup`命令
 
 ## 3.Configure the system
 
