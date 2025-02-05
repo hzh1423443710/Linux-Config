@@ -111,7 +111,7 @@ $ setfacl -k <file>                    # 删除 设置的默认ACL权限
 $ setfacl -m <m:rwx> <file>            # 设置 文件file的mask为rwx 
 ```
 
-###### 
+
 
 ## 软件管理
 
@@ -484,9 +484,13 @@ $ swapoff	# 关闭swap分区
     ```
   
 
-###### 
+
 
 ## 系统和服务管理
+
+`/lib/systemd/system/`：**系统级服务文件**
+
+`/etc/systemd/system/`：**用户自定义服务文件**
 
 为了减少系统启动时间，systemd的目标是：
 
@@ -568,7 +572,7 @@ $ systemctl emergency					# 改变 当前系统为紧急模式
 | poweroff    | systemctl poweroff | 关闭电源 |
 | reboot      | systemctl reboot   | 重启   |
 
-###### 
+
 
 ## 进程管理
 
@@ -995,7 +999,7 @@ $ ip<TAB>domain.com
 
 > **可以删除当前网络连接的DNS进行测试**
 
-###### 
+
 
 ## 文本处理
 
@@ -1257,7 +1261,7 @@ awk '
 ' /etc/passwd
 ```
 
-###### 
+
 
 ## 语言环境
 
@@ -1402,36 +1406,9 @@ $ ]：结束一个非打印字符序列。
 
 # 其他
 
-Linux内核的许可证协议是GPL
-
-开源软件概念首次提出与1998.2
-
-社区发行版:Fedora,openEuler
-
-商业发行版:ubuntu
-
-openEuler是Linux社区发行版
-
-- 正式开源于2019.9, 使用MulanPSL V2开源协议
-
-- 正式发布的第一个版本20.03LTS
-
-- 每半年发布一次创新版
-
-- 每2年发布一次LTS版本,LTS的维护周期是4年.
-
-- openEuler20.03 LTS OS内核版本4.19
-
-**许可证:**
-
-- 木兰宽松许可证(MulanPSL V2) 不具有传染性, 可独占
-- GPL(GNU Public License) 具有传染性
-
 `&>` `&|`: 标准输出和标准错误一起
 
 步长为2: echo{1..10..2}
-
-
 
 find /var/weblogs -mtime +30 -delete
 
@@ -1441,15 +1418,10 @@ parted的使用
 
 - 执行一个脚本必须要有rx权限
   
-  
 
 ## GCC GDB
 
-[GCC GDB](./Linux/gcc_gdb.md)
-
-## vim
-
-[init.vim](./Linux/init.vim)
+[GCC GDB](./gcc_gdb.md)
 
 ## git
 
@@ -1457,11 +1429,11 @@ parted的使用
 
 ## Shell
 
-[shell脚本 zsh配置](./Linux/zsh.md)
+[shell脚本 zsh配置](./zsh.md)
 
 ## 部署服务
 
-[部署服务](./Linux/deploy_service.md)
+[部署服务](./deploy_service.md)
 
 
 
