@@ -492,6 +492,14 @@ $ swapoff	# 关闭swap分区
 
 `/etc/systemd/system/`：**用户自定义服务文件**
 
+### service命令
+
+```bash
+$ service <ssh> <start|stop|status>
+```
+
+
+
 为了减少系统启动时间，systemd的目标是：
 
 - 尽可能启动更少的进程。
@@ -1430,6 +1438,10 @@ parted的使用
 ## Shell
 
 [shell脚本 zsh配置](./zsh.md)
+
+## ssh
+
+[ssh配置](ssh.md)
 
 ## 部署服务
 

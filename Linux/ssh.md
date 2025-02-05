@@ -47,6 +47,9 @@ chmod 600 ~/.ssh/authorized_keys # 放入Windows公钥
 
 ## 允许root登录
 
+- ssh登录到root
+- scp拷贝到root
+
 ```bash
 $ vim /etc/ssh/sshd_config 
 # 添加
