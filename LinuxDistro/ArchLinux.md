@@ -114,12 +114,14 @@ $ pacman -Sy yay								# 安装yay
 在安装盘挂载点 /mnt 目录下安装基本软件包
 
 ```bash
-$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git wget unzip tree gdb fzf jq bind-tools
+$ pacstrap /mnt base base-devel linux linux-firmware sudo vim networkmanager openssh man-db man-pages fish git wget unzip tree gdb fzf jq bind-tools cloc liburing
 ```
 
 - fzf：文件查找配合zmodule Aloxaf/fzf-tab
 - jq：json输出
 - bind-tools：dns工具，如`nslookup`命令
+- cloc: 统计代码行数
+- liburing:Linux内核异步库
 
 ## 3.Configure the system
 
