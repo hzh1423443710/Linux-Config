@@ -3,6 +3,9 @@ set relativenumber
 set cursorline
 set mouse+=a
 
+" 使用系统剪切板
+set clipboard=unnamedplus
+
 " 显示vim模式(默认开启)
 set showmode 
 " 显示状态行,如文件路径(默认为2)
