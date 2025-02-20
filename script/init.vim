@@ -5,6 +5,8 @@ set mouse+=a
 
 " 使用系统剪切板
 set clipboard=unnamedplus
+" 上下窗口边缘至少保留5行
+set scrolloff=5
 
 " 显示vim模式(默认开启)
 set showmode 
@@ -53,20 +55,7 @@ nnoremap <F2> :
 " 复制
 vnoremap <C-c> "+y
 
-" 安装插件管理器 vim-plug
-" vim-plug 的安装目录为 ~/.local/share/nvim/site/autoload/plug.vim
-call plug#begin('~/.local/share/nvim/plugged')
+"颜色主题
+"colorscheme zaibatsu
+colorscheme sorbet
 
-" 在这里添加您想要安装的插件，例如：
-" Plug '插件名称'
-Plug 'catppuccin/nvim'			"主题
-Plug 'numToStr/Comment.nvim'	"注释
-Plug 'preservim/nerdtree'		"文件浏览器
-
-call plug#end()
-
-colorscheme catppuccin
-
-lua << EOF
-require('Comment').setup()
-EOF
